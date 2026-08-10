@@ -1,15 +1,17 @@
 import React from 'react';
-import { BusinessConfig } from '@/types/business';
 import { SectionHeader } from '../ui/SectionHeader';
 import { SafeImage } from '../ui/SafeImage';
 import { CheckCircle2 } from 'lucide-react';
 
 interface AboutSectionProps {
-  config: BusinessConfig;
+  config: any;
 }
 
 export const AboutSection: React.FC<AboutSectionProps> = ({ config }) => {
-  const { about, features } = config;
+  const about = config?.about || {};
+  const features = config?.features || {};
+  const paragraphs = about.text || [];
+  const highlights = about.highlights || [];
 
   return (
     <section id="about" className="py-20 md:py-28 bg-slate-50/50 dark:bg-zinc-950/50">
@@ -21,7 +23,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ config }) => {
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/5]">
               <SafeImage
                 src={about.image}
-                alt={about.title}
+                alt={about.title || 'Hakkımızda'}
                 fill
                 className="object-cover"
                 placeholderLabel="Hakkımızda Görseli"
@@ -29,8 +31,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ config }) => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-white space-y-1">
-                <p className="text-xs uppercase font-semibold tracking-wider opacity-80">{config.industry}</p>
-                <h4 className="text-xl font-bold">{config.businessName}</h4>
+                <p className="text-xs uppercase font-semibold tracking-wider opacity-80">{config?.business?.industry || config?.industry}</p>
+                <h4 className="text-xl font-bold">{config?.business?.name || config?.businessName}</h4>
               </div>
             </div>
           </div>
@@ -39,22 +41,22 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ config }) => {
           <div className="lg:col-span-7 order-1 lg:order-2 space-y-6">
             <SectionHeader
               badge={about.badge || 'Hakkımızda'}
-              title={about.title}
+              title={about.title || 'Hakkımızda'}
               subtitle={about.subtitle}
               align="left"
               className="mb-6"
             />
 
             <div className="space-y-4 text-muted text-base leading-relaxed">
-              {about.text.map((paragraph, index) => (
+              {paragraphs.map((paragraph: string, index: number) => (
                 <p key={index}>{paragraph}</p>
               ))}
             </div>
 
             {/* Highlights List */}
-            {about.highlights && about.highlights.length > 0 && (
+            {highlights.length > 0 && (
               <div className="pt-4 border-t border-slate-200 dark:border-zinc-800 space-y-3">
-                {about.highlights.map((highlight, idx) => (
+                {highlights.map((highlight: string, idx: number) => (
                   <div key={idx} className="flex items-start gap-3 text-sm font-semibold text-foreground">
                     <CheckCircle2 className="w-5 h-5 text-brand-primary shrink-0 mt-0.5" />
                     <span>{highlight}</span>
