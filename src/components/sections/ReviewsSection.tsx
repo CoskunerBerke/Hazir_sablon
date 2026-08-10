@@ -1,6 +1,7 @@
 import React from 'react';
 import { SectionHeader } from '../ui/SectionHeader';
 import { Star, MapPin } from 'lucide-react';
+import { t } from '@/i18n/translations';
 
 interface ReviewsSectionProps {
   config: any;
@@ -8,6 +9,7 @@ interface ReviewsSectionProps {
 
 export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ config }) => {
   const reviewItems = config.reviews?.items || config.reviews || [];
+  const lang = config.language || 'tr';
 
   if (!reviewItems || reviewItems.length === 0) return null;
 
@@ -23,9 +25,9 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ config }) => {
     <section id="reviews" className="py-20 md:py-28 bg-slate-50/70 dark:bg-zinc-950/70 border-t border-slate-200/60 dark:border-zinc-800/60 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
         <SectionHeader
-          badge="Google Müşteri Yorumları"
-          title="Bizi Tercih Edenlerin Gerçek Deneyimleri"
-          subtitle="Google Haritalar üzerinden paylaşılan doğrulanmış danışan ve müşteri geri bildirimleri."
+          badge={config.reviews?.badge || t('sections.reviewsBadge', lang)}
+          title={config.reviews?.title || t('sections.reviewsTitle', lang)}
+          subtitle={config.reviews?.subtitle || t('sections.reviewsSubtitle', lang)}
         />
       </div>
 
@@ -78,7 +80,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ config }) => {
                     </div>
                     <div>
                       <h4 className="text-xs font-bold text-foreground">{rev.name}</h4>
-                      <p className="text-[10px] text-muted">{rev.role || 'Google Kullanıcısı'}</p>
+                      <p className="text-[10px] text-muted">{rev.role || (lang === 'en' ? 'Google Reviewer' : 'Google Kullanıcısı')}</p>
                     </div>
                   </div>
 

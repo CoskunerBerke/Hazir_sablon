@@ -1,9 +1,9 @@
 import React from 'react';
-import { BusinessConfig } from '@/types/business';
 import { SectionHeader } from '../ui/SectionHeader';
 import { SafeImage } from '../ui/SafeImage';
 import { DynamicIcon } from '../ui/DynamicIcon';
 import { Clock, MessageSquare, Tag } from 'lucide-react';
+import { t } from '@/i18n/translations';
 
 interface ServicesSectionProps {
   config: any;
@@ -13,11 +13,14 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ config }) => {
   const serviceItems = config.services?.items || config.services || [];
   const contact = config.contact || {};
   const features = config.features || {};
+  const lang = config.language || 'tr';
 
   if (!serviceItems || serviceItems.length === 0) return null;
 
   const whatsappMessage = encodeURIComponent(
-    'Merhaba, hizmetleriniz hakkında bilgi ve fiyat detayları almak istiyorum.'
+    lang === 'en'
+      ? 'Hello, I would like to get information about your services.'
+      : 'Merhaba, hizmetleriniz hakkında bilgi ve fiyat detayları almak istiyorum.'
   );
   const whatsappUrl = `https://wa.me/${contact.whatsapp}?text=${whatsappMessage}`;
 
@@ -25,9 +28,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ config }) => {
     <section id="services" className="py-20 md:py-28 bg-white dark:bg-zinc-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          badge="Hizmetlerimiz"
-          title="Size Özel Sunulan Profesyonel Bakım ve Çözümler"
-          subtitle="İhtiyacınıza en uygun hizmet paketini seçin veya uzman ekibimizden özel tavsiye alın."
+          badge={config.services?.badge || t('sections.servicesBadge', lang)}
+          title={config.services?.title || t('sections.servicesTitle', lang)}
+          subtitle={config.services?.subtitle || t('sections.servicesSubtitle', lang)}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -73,7 +76,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ config }) => {
                     <div className="w-8 h-8 rounded-lg bg-brand-light text-brand-primary flex items-center justify-center shrink-0">
                       <DynamicIcon name={service.iconName} className="w-4 h-4" />
                     </div>
-                    <h3 className="text-xl font-bold text-foreground leading-snug group-hover:text-brand-primary transition-colors">
+                    <h3 className="text-xl font-bold text-foreground leading-snug group-hover:opacity-80 transition-opacity">
                       {service.title}
                     </h3>
                   </div>
@@ -88,7 +91,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ config }) => {
               <div className="p-6 pt-0 mt-2 border-t border-slate-200/50 dark:border-zinc-700/50 flex items-center justify-between gap-4">
                 {service.price ? (
                   <div className="pt-3">
-                    <span className="text-xs text-muted block">Fiyat</span>
+                    <span className="text-xs text-muted block">{lang === 'en' ? 'Price' : 'Fiyat'}</span>
                     <span className="text-base font-extrabold text-brand-primary">{service.price}</span>
                   </div>
                 ) : (
@@ -99,10 +102,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ config }) => {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold bg-brand-primary hover:bg-brand-primary-hover text-white shadow-xs transition-all hover:scale-105"
+                  className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold bg-brand-primary hover:bg-brand-primary-hover text-[var(--color-on-primary)] shadow-xs transition-all hover:scale-105"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
-                  <span>Bilgi Al</span>
+                  <span>{t('ui.learnMore', lang)}</span>
                 </a>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Instagram, Facebook, Twitter, Linkedin, MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { t } from '@/i18n/translations';
 
 interface FooterProps {
   config: any;
@@ -7,6 +8,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ config }) => {
   const currentYear = new Date().getFullYear();
+  const lang = config?.language || 'tr';
 
   const businessName = config?.business?.name || config?.businessName || 'İşletmeniz';
   const description = config?.business?.description || config?.description || '';
@@ -87,7 +89,9 @@ export const Footer: React.FC<FooterProps> = ({ config }) => {
 
           {/* Column 2: Quick Links */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold uppercase tracking-wider text-white">Hızlı Bağlantılar</h4>
+            <h4 className="text-sm font-bold uppercase tracking-wider text-white">
+              {lang === 'en' ? 'Quick Links' : 'Hızlı Bağlantılar'}
+            </h4>
             <ul className="space-y-2.5 text-sm">
               {navigation.map((nav: any) => (
                 <li key={nav.href}>
@@ -103,7 +107,7 @@ export const Footer: React.FC<FooterProps> = ({ config }) => {
           <div className="space-y-4">
             <h4 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
               <Clock className="w-4 h-4 text-brand-primary" />
-              Çalışma Saatleri
+              {t('sections.hoursTitle', lang)}
             </h4>
             <ul className="space-y-2 text-sm text-slate-400">
               {businessHours.map((hours: any, idx: number) => (
@@ -119,7 +123,9 @@ export const Footer: React.FC<FooterProps> = ({ config }) => {
 
           {/* Column 4: Contact details */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold uppercase tracking-wider text-white">İletişim</h4>
+            <h4 className="text-sm font-bold uppercase tracking-wider text-white">
+              {t('nav.contact', lang)}
+            </h4>
             <ul className="space-y-3 text-sm text-slate-400">
               {contact.phone && (
                 <li className="flex items-start gap-3">
@@ -149,10 +155,14 @@ export const Footer: React.FC<FooterProps> = ({ config }) => {
 
         {/* Bottom copyright & legal */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© {currentYear} {businessName}. Tüm hakları saklıdır.</p>
+          <p>© {currentYear} {businessName}. {t('ui.allRightsReserved', lang)}</p>
           <div className="flex items-center gap-6">
-            <a href="#contact" className="hover:text-slate-300 transition-colors">Gizlilik & Çerez Politikası</a>
-            <a href="#contact" className="hover:text-slate-300 transition-colors">Kullanım Koşulları</a>
+            <a href="#contact" className="hover:text-slate-300 transition-colors">
+              {lang === 'en' ? 'Privacy Policy' : 'Gizlilik & Çerez Politikası'}
+            </a>
+            <a href="#contact" className="hover:text-slate-300 transition-colors">
+              {lang === 'en' ? 'Terms of Use' : 'Kullanım Koşulları'}
+            </a>
           </div>
         </div>
       </div>

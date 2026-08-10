@@ -5,13 +5,14 @@ import { SectionHeader } from '../ui/SectionHeader';
 import { BeforeAfterSlider } from '../ui/BeforeAfterSlider';
 import { DynamicIcon } from '../ui/DynamicIcon';
 import { Check, MessageSquare } from 'lucide-react';
+import { t } from '@/i18n/translations';
 
 interface SpecialSectionProps {
   config: any;
 }
 
 export const SpecialSection: React.FC<SpecialSectionProps> = ({ config }) => {
-  const { specialSection, features, contact } = config || {};
+  const { specialSection, features, contact, language: lang = 'tr' } = config || {};
 
   const isEnabled = features?.showSpecialSection ?? specialSection?.enabled ?? true;
   if (!isEnabled || !specialSection) return null;
@@ -21,14 +22,15 @@ export const SpecialSection: React.FC<SpecialSectionProps> = ({ config }) => {
   const beforeAfterItems = specialSection.beforeAfterItems || [];
   const steps = specialSection.steps || [];
   const packages = specialSection.packages || [];
-  const faqs = specialSection.faqs || [];
 
   const [activeCategory, setActiveCategory] = useState<string>(
-    menuCategories[0] || 'Tümü'
+    menuCategories[0] || (lang === 'en' ? 'All' : 'Tümü')
   );
 
   const whatsappMessage = encodeURIComponent(
-    'Merhaba, özel hizmet teklifiniz ve detaylar hakkında bilgi almak istiyorum.'
+    lang === 'en'
+      ? 'Hello, I would like to get information about your special process and services.'
+      : 'Merhaba, özel hizmet teklifiniz ve detaylar hakkında bilgi almak istiyorum.'
   );
   const whatsappUrl = `https://wa.me/${contact?.whatsapp}?text=${whatsappMessage}`;
 
@@ -36,8 +38,9 @@ export const SpecialSection: React.FC<SpecialSectionProps> = ({ config }) => {
     <section id="special" className="py-20 md:py-28 bg-slate-50/70 dark:bg-zinc-950/70 border-y border-slate-200/60 dark:border-zinc-800/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          title={specialSection.title || 'Özel Bölüm'}
-          subtitle={specialSection.subtitle}
+          badge={specialSection.badge || t('sections.specialBadge', lang)}
+          title={specialSection.title || t('sections.specialTitle', lang)}
+          subtitle={specialSection.subtitle || t('sections.specialSubtitle', lang)}
         />
 
         {/* 1. STEPS / PROCESS LAYOUT */}
@@ -90,7 +93,7 @@ export const SpecialSection: React.FC<SpecialSectionProps> = ({ config }) => {
                     onClick={() => setActiveCategory(cat)}
                     className={`px-5 py-2 rounded-full text-xs font-bold transition-all ${
                       activeCategory === cat
-                        ? 'bg-brand-primary text-white shadow-md'
+                        ? 'bg-brand-primary text-[var(--color-on-primary)] shadow-md'
                         : 'bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-muted hover:text-foreground'
                     }`}
                   >
@@ -105,7 +108,7 @@ export const SpecialSection: React.FC<SpecialSectionProps> = ({ config }) => {
               {menuItems
                 .filter(
                   (item: any) =>
-                    activeCategory === 'Tümü' || item.category === activeCategory
+                    activeCategory === 'Tümü' || activeCategory === 'All' || item.category === activeCategory
                 )
                 .map((item: any) => (
                   <div
@@ -145,8 +148,8 @@ export const SpecialSection: React.FC<SpecialSectionProps> = ({ config }) => {
                 }`}
               >
                 {pkg.recommended && (
-                  <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold bg-brand-primary text-white shadow-md">
-                    En Çok Tercih Edilen
+                  <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold bg-brand-primary text-[var(--color-on-primary)] shadow-md">
+                    {lang === 'en' ? 'Most Popular' : 'En Çok Tercih Edilen'}
                   </span>
                 )}
 
@@ -177,12 +180,12 @@ export const SpecialSection: React.FC<SpecialSectionProps> = ({ config }) => {
                   rel="noopener noreferrer"
                   className={`mt-8 w-full inline-flex items-center justify-center gap-2 py-3 rounded-full text-xs font-bold transition-all ${
                     pkg.recommended
-                      ? 'bg-brand-primary hover:bg-brand-primary-hover text-white shadow-md'
+                      ? 'bg-brand-primary hover:bg-brand-primary-hover text-[var(--color-on-primary)] shadow-md'
                       : 'border border-slate-200 dark:border-zinc-700 text-foreground hover:bg-slate-50 dark:hover:bg-zinc-800'
                   }`}
                 >
                   <MessageSquare className="w-4 h-4" />
-                  <span>{pkg.ctaText || 'Hemen Başlayın'}</span>
+                  <span>{pkg.ctaText || (lang === 'en' ? 'Get Started' : 'Hemen Başlayın')}</span>
                 </a>
               </div>
             ))}

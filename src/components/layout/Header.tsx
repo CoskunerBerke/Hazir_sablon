@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Phone, MessageSquare, ArrowRight, Sun, Moon, Globe } from 'lucide-react';
+import { Menu, X, Phone, MessageSquare, ArrowRight, Sun, Moon } from 'lucide-react';
 import { SafeImage } from '../ui/SafeImage';
 import { formatPhoneLink, formatWhatsAppLink } from '@/lib/validation/phone';
 import { useSiteStore } from '@/store/use-site-store';
+import { t } from '@/i18n/translations';
 
 interface HeaderProps {
   config: any;
@@ -51,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
     .toUpperCase()
     .slice(0, 2) || 'İA';
 
-  const primaryCta = config.hero?.primaryCta || { text: currentLang === 'en' ? 'Contact Us' : 'İletişim', href: '#contact' };
+  const primaryCta = config.hero?.primaryCta || { text: t('ui.contactUs', currentLang), href: '#contact' };
   const logoSrc = config.logo || config.brand?.logo;
 
   const phoneLink = formatPhoneLink(config.contact?.phone);
@@ -89,10 +90,10 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
               </div>
             ) : (
               <div className="flex items-center gap-2.5 border-0 outline-none ring-0 shadow-none">
-                <div className="w-10 h-10 rounded-xl bg-brand-primary text-white flex items-center justify-center font-extrabold text-base tracking-wider shadow-md shadow-brand-primary/20 group-hover:scale-105 transition-transform border-0">
+                <div className="w-10 h-10 rounded-xl bg-brand-primary text-[var(--color-on-primary)] flex items-center justify-center font-extrabold text-base tracking-wider shadow-md shadow-brand-primary/20 group-hover:scale-105 transition-transform border-0">
                   {monogram}
                 </div>
-                <span className="font-extrabold text-lg text-foreground tracking-tight group-hover:text-brand-primary transition-colors border-0">
+                <span className="font-extrabold text-lg text-foreground tracking-tight group-hover:opacity-80 transition-opacity border-0">
                   {shortNameText}
                 </span>
               </div>
@@ -111,7 +112,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
                   href={item.href}
                   className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
                     isActive
-                      ? 'bg-brand-primary text-white shadow-sm'
+                      ? 'bg-brand-primary text-[var(--color-on-primary)] shadow-sm'
                       : 'text-muted hover:text-foreground hover:bg-slate-200/60 dark:hover:bg-zinc-800/60'
                   }`}
                 >
@@ -129,7 +130,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
                 onClick={() => setLanguage('tr')}
                 className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold transition-all ${
                   currentLang === 'tr'
-                    ? 'bg-brand-primary text-white shadow-xs'
+                    ? 'bg-brand-primary text-[var(--color-on-primary)] shadow-xs'
                     : 'text-slate-600 dark:text-zinc-400 hover:text-foreground'
                 }`}
                 title="Türkçe Versiyona Geç"
@@ -140,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
                 onClick={() => setLanguage('en')}
                 className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold transition-all ${
                   currentLang === 'en'
-                    ? 'bg-brand-primary text-white shadow-xs'
+                    ? 'bg-brand-primary text-[var(--color-on-primary)] shadow-xs'
                     : 'text-slate-600 dark:text-zinc-400 hover:text-foreground'
                 }`}
                 title="Switch to English Version"
@@ -173,7 +174,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
               href={finalCtaHref}
               target={isWaType ? '_blank' : undefined}
               rel={isWaType ? 'noopener noreferrer' : undefined}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-brand-primary hover:bg-brand-primary-hover text-white shadow-md shadow-brand-primary/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-brand-primary hover:bg-brand-primary-hover text-[var(--color-on-primary)] shadow-md shadow-brand-primary/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               {isWaType && <MessageSquare className="w-4 h-4" />}
               <span>{primaryCta.text}</span>
@@ -228,7 +229,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
               onClick={() => setMobileMenuOpen(false)}
               target={isWaType ? '_blank' : undefined}
               rel={isWaType ? 'noopener noreferrer' : undefined}
-              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-bold bg-brand-primary text-white shadow-lg shadow-brand-primary/25"
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-bold bg-brand-primary text-[var(--color-on-primary)] shadow-lg shadow-brand-primary/25"
             >
               {isWaType && <MessageSquare className="w-5 h-5" />}
               <span>{primaryCta.text}</span>

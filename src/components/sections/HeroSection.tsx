@@ -1,6 +1,7 @@
 import React from 'react';
 import { SafeImage } from '../ui/SafeImage';
 import { MessageSquare, ArrowRight, ShieldCheck, Star } from 'lucide-react';
+import { t } from '@/i18n/translations';
 
 interface HeroSectionProps {
   config: any;
@@ -10,12 +11,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ config }) => {
   const hero = config?.hero || {};
   const contact = config?.contact || {};
   const features = config?.features || {};
+  const lang = config?.language || 'tr';
 
-  const primaryCta = hero.primaryCta || { text: 'Bize Ulaşın', href: '#contact', type: 'whatsapp' };
-  const secondaryCta = hero.secondaryCta;
+  const primaryCta = hero.primaryCta || { text: t('ui.contactUs', lang), href: '#contact', type: 'whatsapp' };
+  const secondaryCta = hero.secondaryCta || { text: t('ui.exploreServices', lang), href: '#services' };
 
   const whatsappUrl = `https://wa.me/${contact.whatsapp || ''}?text=${encodeURIComponent(
-    contact.whatsappDefaultMessage || 'Merhaba, randevu ve bilgi almak istiyorum.'
+    contact.whatsappDefaultMessage || (lang === 'en' ? 'Hello, I would like to get information.' : 'Merhaba, randevu ve bilgi almak istiyorum.')
   )}`;
 
   const primaryHref = primaryCta.type === 'whatsapp' ? whatsappUrl : primaryCta.href || '#contact';
@@ -38,7 +40,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ config }) => {
             )}
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground leading-[1.15] tracking-tight">
-              {hero.title || config?.business?.tagline || 'İşletmenizi Tanıtın'}
+              {hero.title || config?.business?.tagline || (lang === 'en' ? 'Inspiring Solutions for Your Business' : 'İşletmenizi Tanıtın')}
             </h1>
 
             <p className="text-lg md:text-xl text-muted leading-relaxed max-w-2xl mx-auto lg:mx-0 font-normal">
@@ -51,7 +53,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ config }) => {
                 href={primaryHref}
                 target={primaryCta.type === 'whatsapp' ? '_blank' : undefined}
                 rel={primaryCta.type === 'whatsapp' ? 'noopener noreferrer' : undefined}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full text-base font-bold bg-brand-primary hover:bg-brand-primary-hover text-white shadow-xl shadow-brand-primary/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full text-base font-bold bg-brand-primary hover:bg-brand-primary-hover text-[var(--color-on-primary)] shadow-xl shadow-brand-primary/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 {primaryCta.type === 'whatsapp' && <MessageSquare className="w-5 h-5 fill-current" />}
                 <span>{primaryCta.text}</span>
@@ -72,11 +74,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ config }) => {
             <div className="pt-6 border-t border-slate-200/80 dark:border-zinc-800/80 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-muted">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-brand-primary" />
-                <span>Hijyen & Kalite Garantisi</span>
+                <span>{lang === 'en' ? 'Quality & Hygiene Guaranteed' : 'Hijyen & Kalite Garantisi'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Randevu Hattı Açık</span>
+                <span>{lang === 'en' ? 'Consultation Open' : 'Randevu Hattı Açık'}</span>
               </div>
             </div>
           </div>
@@ -90,11 +92,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ config }) => {
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/5]">
                 <SafeImage
                   src={hero.image}
-                  alt={hero.title || 'Hero Görseli'}
+                  alt={hero.title || (lang === 'en' ? 'Hero Image' : 'Hero Görseli')}
                   fill
                   priority
                   className="object-cover"
-                  placeholderLabel="Hero Görseli"
+                  placeholderLabel={t('ui.heroImage', lang)}
                   showDevBadge={features.showPlaceholderBadges}
                 />
 

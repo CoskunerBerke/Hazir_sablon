@@ -2,6 +2,7 @@ import React from 'react';
 import { SectionHeader } from '../ui/SectionHeader';
 import { Phone, MessageSquare, Mail, MapPin, Clock, ExternalLink } from 'lucide-react';
 import { formatPhoneLink, formatWhatsAppLink } from '@/lib/validation/phone';
+import { t } from '@/i18n/translations';
 
 interface ContactSectionProps {
   config: any;
@@ -11,10 +12,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
   const contact = config?.contact || {};
   const businessHours = contact.businessHours || config?.businessHours || [];
   const features = config?.features || {};
+  const lang = config?.language || 'tr';
 
   const whatsappUrl = formatWhatsAppLink(
     contact.whatsapp,
-    contact.whatsappDefaultMessage || 'Merhaba, web siteniz üzerinden randevu ve bilgi almak istiyorum.'
+    contact.whatsappDefaultMessage || (lang === 'en' ? 'Hello, I would like to get information.' : 'Merhaba, web siteniz üzerinden randevu ve bilgi almak istiyorum.')
   );
   const phoneUrl = formatPhoneLink(contact.phone);
 
@@ -22,9 +24,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
     <section id="contact" className="py-20 md:py-28 bg-white dark:bg-zinc-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          badge="İletişim & Konum"
-          title="Bizimle İletişime Geçin veya Ziyaret Edin"
-          subtitle="Sorularınız, randevu talepleriniz veya bilgi almak için tek tıkla ulaşın."
+          badge={config.contact?.badge || t('sections.contactBadge', lang)}
+          title={config.contact?.title || t('sections.contactTitle', lang)}
+          subtitle={config.contact?.subtitle || t('sections.contactSubtitle', lang)}
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
@@ -46,11 +48,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
                     <MessageSquare className="w-6 h-6 fill-current" />
                   </div>
                   <div>
-                    <h4 className="text-base font-bold text-foreground">WhatsApp Destek</h4>
-                    <p className="text-xs text-muted mt-1">Anında randevu & mesajlaşma</p>
+                    <h4 className="text-base font-bold text-foreground">WhatsApp</h4>
+                    <p className="text-xs text-muted mt-1">{lang === 'en' ? 'Instant messaging' : 'Anında randevu & mesajlaşma'}</p>
                   </div>
                   <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                    Mesaj Gönder →
+                    {lang === 'en' ? 'Send Message →' : 'Mesaj Gönder →'}
                   </span>
                 </a>
               )}
@@ -61,15 +63,15 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
                   href={phoneUrl}
                   className="p-6 rounded-3xl bg-brand-light/50 border border-brand-primary/20 hover:border-brand-primary/40 transition-colors space-y-3 group"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-brand-primary text-white flex items-center justify-center shadow-md shadow-brand-primary/30 group-hover:scale-105 transition-transform">
+                  <div className="w-12 h-12 rounded-2xl bg-brand-primary text-[var(--color-on-primary)] flex items-center justify-center shadow-md shadow-brand-primary/30 group-hover:scale-105 transition-transform">
                     <Phone className="w-6 h-6" />
                   </div>
                   <div>
-                    <h4 className="text-base font-bold text-foreground">Telefon İletişim</h4>
+                    <h4 className="text-base font-bold text-foreground">{t('ui.phone', lang)}</h4>
                     <p className="text-xs text-muted mt-1">{contact.phoneFormatted || contact.phone}</p>
                   </div>
                   <span className="inline-flex items-center gap-1 text-xs font-bold text-brand-primary">
-                    Hemen Ara →
+                    {lang === 'en' ? 'Call Now →' : 'Hemen Ara →'}
                   </span>
                 </a>
               )}
@@ -83,7 +85,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-foreground">Açık Adres</h4>
+                    <h4 className="text-sm font-bold text-foreground">{t('ui.address', lang)}</h4>
                     <p className="text-sm text-muted leading-relaxed">{contact.address}</p>
                     {contact.mapsUrl && (
                       <a
@@ -92,7 +94,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-primary hover:underline pt-1"
                       >
-                        <span>Google Haritalar&apos;da Aç</span>
+                        <span>{lang === 'en' ? 'Open in Google Maps' : "Google Haritalar'da Aç"}</span>
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     )}
@@ -106,7 +108,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
                     <Mail className="w-5 h-5" />
                   </div>
                   <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-foreground">E-posta Adresi</h4>
+                    <h4 className="text-sm font-bold text-foreground">{t('ui.email', lang)}</h4>
                     <a href={`mailto:${contact.email}`} className="text-sm text-muted hover:text-foreground">
                       {contact.email}
                     </a>
@@ -120,7 +122,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
               <div className="p-8 rounded-3xl bg-slate-50/70 dark:bg-zinc-800/50 border border-slate-200/80 dark:border-zinc-700/60 space-y-4">
                 <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                   <Clock className="w-4 h-4 text-brand-primary" />
-                  Çalışma Saatleri
+                  {t('sections.hoursTitle', lang)}
                 </h4>
                 <div className="space-y-2 text-xs">
                   {businessHours.map((hrs: any, index: number) => (
@@ -156,15 +158,15 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
             ) : contact.mapsUrl ? (
               <div className="p-12 rounded-3xl bg-slate-50/70 dark:bg-zinc-800/50 border border-slate-200/80 dark:border-zinc-700/60 flex flex-col items-center justify-center text-center space-y-4 min-h-[350px]">
                 <MapPin className="w-12 h-12 text-brand-primary" />
-                <h4 className="text-lg font-bold text-foreground">Haritada Konumumuz</h4>
+                <h4 className="text-lg font-bold text-foreground">{lang === 'en' ? 'Our Location' : 'Haritada Konumumuz'}</h4>
                 <p className="text-sm text-muted max-w-md">{contact.address}</p>
                 <a
                   href={contact.mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs font-bold bg-brand-primary text-white shadow-md hover:bg-brand-primary-hover transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs font-bold bg-brand-primary text-[var(--color-on-primary)] shadow-md hover:bg-brand-primary-hover transition-all"
                 >
-                  <span>Google Haritalar&apos;da Yol Tarifi Al</span>
+                  <span>{lang === 'en' ? 'Get Directions on Google Maps' : "Google Haritalar'da Yol Tarifi Al"}</span>
                   <ExternalLink className="w-4 h-4" />
                 </a>
               </div>

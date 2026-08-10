@@ -14,11 +14,12 @@ export function generateCssVariablesFromConfig(theme: ThemeConfig): Record<strin
   const secondaryRgb = hexToRgb(secondaryHex);
   const accentRgb = hexToRgb(accentHex);
 
+  // Automatic WCAG AA contrast calculation (Returns #000000 or #ffffff)
   const primaryTextOnButton = getContrastTextColor(primaryHex);
   const secondaryTextOnButton = getContrastTextColor(secondaryHex);
 
   // Hover lightness adjustment
-  const hoverL = Math.max(10, Math.min(90, primaryHsl.l > 50 ? primaryHsl.l - 12 : primaryHsl.l + 12));
+  const hoverL = Math.max(10, Math.min(90, primaryHsl.l > 50 ? primaryHsl.l - 14 : primaryHsl.l + 14));
   const lightL = Math.min(96, Math.max(88, primaryHsl.l + 35));
 
   // Border Radius Mapping
@@ -46,24 +47,34 @@ export function generateCssVariablesFromConfig(theme: ThemeConfig): Record<strin
     warm: { heading: "'Outfit', sans-serif", body: "'Inter', sans-serif" },
     bold: { heading: "'Outfit', sans-serif", body: "'Inter', sans-serif" },
     luxury: { heading: "'Playfair Display', serif", body: "'Inter', sans-serif" },
+    corporate: { heading: "'Outfit', sans-serif", body: "'Inter', sans-serif" },
   };
 
   const fonts = fontPairMap[typography?.fontPair || preset] || fontPairMap.modern;
 
-  // Preset Overrides
-  let bgValue = colors.background || '#F8FAFC';
-  let surfaceValue = colors.surface || '#FFFFFF';
-  let textPrimaryValue = colors.textPrimary || '#0F172A';
-  let textMutedValue = colors.textMuted || '#64748B';
+  // Semantic Light vs Dark Mode Color Variables
+  const isDark = mode === 'dark';
 
-  if (mode === 'dark') {
-    bgValue = colors.background !== '#F8FAFC' ? colors.background : '#09090b';
-    surfaceValue = colors.surface !== '#FFFFFF' ? colors.surface : '#18181b';
-    textPrimaryValue = colors.textPrimary !== '#0F172A' ? colors.textPrimary : '#f8fafc';
-    textMutedValue = colors.textMuted !== '#64748B' ? colors.textMuted : '#a1a1aa';
-  }
+  const colorBackground = isDark ? '#09090b' : (colors.background || '#F8FAFC');
+  const colorSurface = isDark ? '#18181b' : (colors.surface || '#FFFFFF');
+  const colorSurfaceAlt = isDark ? '#27272a' : '#F1F5F9';
+  const colorText = isDark ? '#F8FAFC' : (colors.textPrimary || '#0F172A');
+  const colorTextMuted = isDark ? '#A1A1AA' : (colors.textMuted || '#64748B');
+  const colorBorder = isDark ? '#27272a' : '#E2E8F0';
 
   return {
+    // Exact Prompt Required Semantic Color System
+    '--color-background': colorBackground,
+    '--color-surface': colorSurface,
+    '--color-surface-alt': colorSurfaceAlt,
+    '--color-text': colorText,
+    '--color-text-muted': colorTextMuted,
+    '--color-border': colorBorder,
+    '--color-primary': primaryHex,
+    '--color-primary-hover': `hsl(${primaryHsl.h}, ${primaryHsl.s}%, ${hoverL}%)`,
+    '--color-on-primary': primaryTextOnButton,
+
+    // Component Theme Aliases
     '--brand-primary': primaryHex,
     '--brand-primary-rgb': `${primaryRgb.r}, ${primaryRgb.g}, ${primaryRgb.b}`,
     '--brand-primary-hsl': `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`,
@@ -73,12 +84,13 @@ export function generateCssVariablesFromConfig(theme: ThemeConfig): Record<strin
     '--brand-secondary-rgb': `${secondaryRgb.r}, ${secondaryRgb.g}, ${secondaryRgb.b}`,
     '--brand-accent': accentHex,
     '--brand-accent-rgb': `${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}`,
-    '--background': bgValue,
-    '--surface': surfaceValue,
-    '--surface-card': surfaceValue,
-    '--surface-muted': mode === 'dark' ? '#27272a' : '#f8fafc',
-    '--foreground': textPrimaryValue,
-    '--muted-foreground': textMutedValue,
+    '--background': colorBackground,
+    '--surface': colorSurface,
+    '--surface-card': colorSurface,
+    '--surface-muted': colorSurfaceAlt,
+    '--foreground': colorText,
+    '--muted-foreground': colorTextMuted,
+    '--border-color': colorBorder,
     '--text-on-primary': primaryTextOnButton,
     '--text-on-secondary': secondaryTextOnButton,
     '--radius-button': radiusMap[appearance?.borderRadius] || '9999px',

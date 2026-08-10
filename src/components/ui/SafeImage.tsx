@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import Image, { ImageProps } from 'next/image';
 import { Upload } from 'lucide-react';
+import { useSiteStore } from '@/store/use-site-store';
+import { t } from '@/i18n/translations';
 
 interface SafeImageProps extends Omit<ImageProps, 'src' | 'alt'> {
   src?: string | null;
@@ -25,6 +27,8 @@ export const SafeImage: React.FC<SafeImageProps> = ({
   ...props
 }) => {
   const [error, setError] = useState(false);
+  const { config } = useSiteStore();
+  const language = config?.language || 'tr';
 
   const isInvalidSrc = !src || src.trim() === '' || error;
 
@@ -39,7 +43,7 @@ export const SafeImage: React.FC<SafeImageProps> = ({
             <Upload className="w-4 h-4 opacity-70" />
           </div>
           <span className="text-xs font-bold text-slate-700 dark:text-zinc-200">
-            Fotoğrafınızı yükleyin
+            {t('ui.uploadPhoto', language)}
           </span>
           {placeholderLabel && (
             <span className="text-[10px] text-muted max-w-[85%] truncate">

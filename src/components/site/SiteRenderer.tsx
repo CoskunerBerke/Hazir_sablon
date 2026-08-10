@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SiteConfig } from '@/types/site-config';
 import { generateCssVariablesFromConfig } from '@/lib/theme/theme-generator';
+import { t } from '@/i18n/translations';
 import { Header } from '../layout/Header';
 import { HeroSection } from '../sections/HeroSection';
 import { TrustSection } from '../sections/TrustSection';
@@ -22,27 +23,35 @@ interface SiteRendererProps {
   selectedSectionId?: string | null;
 }
 
-const SECTION_BADGE_NAMES: Record<string, string> = {
-  hero: 'Giriş / Manşet',
-  trust: 'Güven Rozetleri',
-  about: 'Hakkımızda',
-  services: 'Hizmetler & Ürünler',
-  special: 'İnteraktif Özel Bölüm',
-  gallery: 'Galeri',
-  reviews: 'Müşteri Yorumları',
-  contact: 'İletişim & Harita',
-};
-
 export const SiteRenderer: React.FC<SiteRendererProps> = ({
   config,
   isEditorPreview = false,
   onSelectSection,
   selectedSectionId,
 }) => {
-  const { sectionOrder = [], sectionVisibility = {}, features = {}, theme } = config || {};
+  const { sectionOrder = [], sectionVisibility = {}, features = {}, theme, language = 'tr' } = config || {};
 
   // Dynamically compute CSS variables from live store config
   const themeCssVars = theme ? generateCssVariablesFromConfig(theme) : {};
+  const isDark = theme?.mode === 'dark';
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = language || 'tr';
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    }
+  }, [language, isDark]);
+
+  const SECTION_BADGE_NAMES: Record<string, string> = {
+    hero: language === 'en' ? 'Hero / Banner' : 'Giriş / Manşet',
+    trust: language === 'en' ? 'Trust Badges' : 'Güven Rozetleri',
+    about: language === 'en' ? 'About Us' : 'Hakkımızda',
+    services: language === 'en' ? 'Services & Products' : 'Hizmetler & Ürünler',
+    special: language === 'en' ? 'Service Process' : 'İnteraktif Özel Bölüm',
+    gallery: language === 'en' ? 'Gallery' : 'Galeri',
+    reviews: language === 'en' ? 'Reviews' : 'Müşteri Yorumları',
+    contact: language === 'en' ? 'Contact & Map' : 'İletişim & Harita',
+  };
 
   const renderSectionComponent = (sectionId: string) => {
     if (!sectionVisibility[sectionId]) return null;
@@ -94,8 +103,8 @@ export const SiteRenderer: React.FC<SiteRendererProps> = ({
         }}
       >
         {isSelected && (
-          <div className="absolute top-3 right-4 z-30 px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-brand-primary text-white shadow-lg pointer-events-none uppercase tracking-wider flex items-center gap-1.5 animate-pulse">
-            <span>✏️ Düzenlenen Bölüm: {SECTION_BADGE_NAMES[sectionId] || sectionId}</span>
+          <div className="absolute top-3 right-4 z-30 px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-brand-primary text-[var(--color-on-primary)] shadow-lg pointer-events-none uppercase tracking-wider flex items-center gap-1.5 animate-pulse">
+            <span>✏️ {t('ui.editingSection', language)}: {SECTION_BADGE_NAMES[sectionId] || sectionId}</span>
           </div>
         )}
         {sectionContent}
@@ -107,9 +116,10 @@ export const SiteRenderer: React.FC<SiteRendererProps> = ({
 
   return (
     <div
+      data-theme={isDark ? 'dark' : 'light'}
       data-style-preset={theme?.preset || 'minimal'}
       className={`min-h-screen flex flex-col justify-between bg-background text-foreground transition-colors duration-300 ${
-        theme?.mode === 'dark' ? 'dark' : ''
+        isDark ? 'dark' : ''
       }`}
       style={themeCssVars as React.CSSProperties}
     >
@@ -124,7 +134,7 @@ export const SiteRenderer: React.FC<SiteRendererProps> = ({
 
       {/* Top Announcement Bar if enabled */}
       {feat.showAnnouncementBar && feat.announcementText && (
-        <div className="bg-brand-primary text-white text-center py-2 px-4 text-xs font-bold tracking-wide">
+        <div className="bg-brand-primary text-[var(--color-on-primary)] text-center py-2 px-4 text-xs font-bold tracking-wide">
           {feat.announcementText}
         </div>
       )}

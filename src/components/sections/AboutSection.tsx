@@ -2,6 +2,7 @@ import React from 'react';
 import { SectionHeader } from '../ui/SectionHeader';
 import { SafeImage } from '../ui/SafeImage';
 import { CheckCircle2 } from 'lucide-react';
+import { t } from '@/i18n/translations';
 
 interface AboutSectionProps {
   config: any;
@@ -10,6 +11,7 @@ interface AboutSectionProps {
 export const AboutSection: React.FC<AboutSectionProps> = ({ config }) => {
   const about = config?.about || {};
   const features = config?.features || {};
+  const lang = config?.language || 'tr';
   const paragraphs = about.text || [];
   const highlights = about.highlights || [];
 
@@ -23,10 +25,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ config }) => {
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/5]">
               <SafeImage
                 src={about.image}
-                alt={about.title || 'Hakkımızda'}
+                alt={about.title || t('sections.aboutBadge', lang)}
                 fill
                 className="object-cover"
-                placeholderLabel="Hakkımızda Görseli"
+                placeholderLabel={t('ui.aboutImage', lang)}
                 showDevBadge={features.showPlaceholderBadges}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
@@ -40,9 +42,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ config }) => {
           {/* Right Column: Text & Highlights */}
           <div className="lg:col-span-7 order-1 lg:order-2 space-y-6">
             <SectionHeader
-              badge={about.badge || 'Hakkımızda'}
-              title={about.title || 'Hakkımızda'}
-              subtitle={about.subtitle}
+              badge={about.badge || t('sections.aboutBadge', lang)}
+              title={about.title || t('sections.aboutTitle', lang)}
+              subtitle={about.subtitle || t('sections.aboutSubtitle', lang)}
               align="left"
               className="mb-6"
             />
