@@ -8,7 +8,6 @@ import { SectionsPanel } from './panels/SectionsPanel';
 import { DesignPanel } from './panels/DesignPanel';
 import { MediaPanel } from './panels/MediaPanel';
 import { ContactPanel } from './panels/ContactPanel';
-import { SeoPanel } from './panels/SeoPanel';
 import { SettingsPanel } from './panels/SettingsPanel';
 import { PreviewFrame } from './preview/PreviewFrame';
 
@@ -24,7 +23,6 @@ import {
   Palette,
   Image as ImageIcon,
   Phone,
-  Search,
   Settings,
   ExternalLink,
   CheckCircle2,
@@ -57,7 +55,6 @@ export const EditorLayout: React.FC = () => {
     { id: 'design', label: 'Tasarım', icon: <Palette className="w-4 h-4" /> },
     { id: 'media', label: 'Fotoğraflar', icon: <ImageIcon className="w-4 h-4" /> },
     { id: 'contact', label: 'İletişim', icon: <Phone className="w-4 h-4" /> },
-    { id: 'seo', label: 'SEO', icon: <Search className="w-4 h-4" /> },
     { id: 'settings', label: 'Ayarlar', icon: <Settings className="w-4 h-4" /> },
   ];
 
@@ -218,7 +215,6 @@ export const EditorLayout: React.FC = () => {
               {activePanelTab === 'design' && <DesignPanel />}
               {activePanelTab === 'media' && <MediaPanel />}
               {activePanelTab === 'contact' && <ContactPanel />}
-              {activePanelTab === 'seo' && <SeoPanel />}
               {activePanelTab === 'settings' && <SettingsPanel />}
             </div>
           </aside>

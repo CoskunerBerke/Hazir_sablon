@@ -5,7 +5,7 @@ import { useSiteStore } from '@/store/use-site-store';
 import { SiteRenderer } from '@/components/site/SiteRenderer';
 
 export const PreviewFrame: React.FC = () => {
-  const { config, viewportMode, selectedSection, setSelectedSection } = useSiteStore();
+  const { config, viewportMode, selectedSection, selectSectionAndTab } = useSiteStore();
 
   const getViewportWidthClass = () => {
     switch (viewportMode) {
@@ -27,7 +27,7 @@ export const PreviewFrame: React.FC = () => {
           config={config}
           isEditorPreview={viewportMode !== 'fullscreen'}
           selectedSectionId={selectedSection}
-          onSelectSection={(id) => setSelectedSection(id)}
+          onSelectSection={(id) => selectSectionAndTab(id)}
         />
       </div>
     </div>

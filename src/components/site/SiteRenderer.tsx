@@ -22,6 +22,17 @@ interface SiteRendererProps {
   selectedSectionId?: string | null;
 }
 
+const SECTION_BADGE_NAMES: Record<string, string> = {
+  hero: 'Giriş / Manşet',
+  trust: 'Güven Rozetleri',
+  about: 'Hakkımızda',
+  services: 'Hizmetler & Ürünler',
+  special: 'İnteraktif Özel Bölüm',
+  gallery: 'Galeri',
+  reviews: 'Müşteri Yorumları',
+  contact: 'İletişim & Harita',
+};
+
 export const SiteRenderer: React.FC<SiteRendererProps> = ({
   config,
   isEditorPreview = false,
@@ -75,15 +86,16 @@ export const SiteRenderer: React.FC<SiteRendererProps> = ({
         key={sectionId}
         id={sectionId}
         className={wrapperClass}
-        onClick={() => {
+        onClick={(e) => {
           if (isEditorPreview && onSelectSection) {
+            e.stopPropagation();
             onSelectSection(sectionId);
           }
         }}
       >
         {isSelected && (
-          <div className="absolute top-3 right-4 z-30 px-3 py-1 rounded-full text-[11px] font-bold bg-brand-primary text-white shadow-md pointer-events-none uppercase tracking-wider flex items-center gap-1">
-            <span>Düzenlenen Bölüm: {sectionId}</span>
+          <div className="absolute top-3 right-4 z-30 px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-brand-primary text-white shadow-lg pointer-events-none uppercase tracking-wider flex items-center gap-1.5 animate-pulse">
+            <span>✏️ Düzenlenen Bölüm: {SECTION_BADGE_NAMES[sectionId] || sectionId}</span>
           </div>
         )}
         {sectionContent}

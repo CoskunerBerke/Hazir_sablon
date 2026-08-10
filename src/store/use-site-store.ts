@@ -4,7 +4,7 @@ import { defaultSiteConfig } from '@/config/default-site-config';
 import { applySectorPreset } from '@/config/sector-presets';
 import { STYLE_PRESETS } from '@/config/style-presets';
 
-export type PanelTab = 'content' | 'sections' | 'design' | 'media' | 'contact' | 'seo' | 'settings';
+export type PanelTab = 'content' | 'sections' | 'design' | 'media' | 'contact' | 'settings';
 export type ViewportMode = 'desktop' | 'tablet' | 'mobile' | 'fullscreen';
 
 interface SiteStoreState {
@@ -22,8 +22,9 @@ interface SiteStoreState {
   setActivePanelTab: (tab: PanelTab) => void;
   setViewportMode: (mode: ViewportMode) => void;
   setSelectedSection: (sectionId: string | null) => void;
+  selectSectionAndTab: (sectionId: string) => void;
 
-  updateConfig: (updater: (draft: SiteConfig) => void | SiteConfig) => void;
+  updateConfig: (updater: (draft: SiteConfig) => void | SiteConfig, skipHistory?: boolean) => void;
   setConfigDirectly: (newConfig: SiteConfig) => void;
 
   undo: () => void;
@@ -43,6 +44,8 @@ interface SiteStoreState {
 
 const LOCAL_STORAGE_KEY = 'site_builder_config_v1';
 const MAX_HISTORY_STEPS = 30;
+
+let lastHistoryTimestamp = 0;
 
 /**
  * Migration helper to clear legacy stock photo paths (/assets/client/*)
@@ -103,11 +106,33 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
   setViewportMode: (mode) => set({ viewportMode: mode }),
   setSelectedSection: (sectionId) => set({ selectedSection: sectionId }),
 
-  updateConfig: (updater) => {
-    const { config, pastHistory } = get();
+  selectSectionAndTab: (sectionId: string) => {
+    // Contextual section selection: maps section clicked in live preview to left editor panel tab
+    let targetTab: PanelTab = 'content';
+    if (sectionId === 'gallery') {
+      targetTab = 'media';
+    } else if (sectionId === 'contact') {
+      targetTab = 'contact';
+    } else if (sectionId === 'services') {
+      targetTab = 'content';
+    }
 
-    // Push current config to history
-    const newPast = [...pastHistory, config].slice(-MAX_HISTORY_STEPS);
+    set({
+      selectedSection: sectionId,
+      activePanelTab: targetTab,
+    });
+  },
+
+  updateConfig: (updater, skipHistory = false) => {
+    const { config, pastHistory } = get();
+    const now = Date.now();
+
+    // Push to history if not skipped and at least 1500ms since last history snapshot
+    let newPast = pastHistory;
+    if (!skipHistory && now - lastHistoryTimestamp > 1500) {
+      newPast = [...pastHistory, config].slice(-MAX_HISTORY_STEPS);
+      lastHistoryTimestamp = now;
+    }
 
     // Deep clone config to avoid direct mutation
     const draft = JSON.parse(JSON.stringify(config)) as SiteConfig;
@@ -117,14 +142,14 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
     set({
       config: newConfig,
       pastHistory: newPast,
-      futureHistory: [], // Clear redo stack on new action
+      futureHistory: [],
       isSaving: true,
       lastSavedAt: new Date().toLocaleTimeString('tr-TR'),
     });
 
     // Auto save
     get().saveToLocalStorage();
-    setTimeout(() => set({ isSaving: false }), 400);
+    setTimeout(() => set({ isSaving: false }), 300);
   },
 
   setConfigDirectly: (newConfig) => {
