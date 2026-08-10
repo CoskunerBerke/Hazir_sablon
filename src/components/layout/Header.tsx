@@ -68,24 +68,27 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Logo / Monogram */}
-          <Link href="/" className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-brand-primary rounded-lg p-1">
+          {/* Logo / Monogram Link (Clean without outline/ring/border) */}
+          <Link
+            href="/"
+            className="flex items-center gap-3 group border-0 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:ring-0 select-none shadow-none"
+          >
             {logoSrc ? (
-              <div className="relative h-10 w-36 sm:w-44 flex items-center">
+              <div className="relative h-10 w-36 sm:w-44 flex items-center overflow-hidden border-0 outline-none ring-0 shadow-none">
                 <SafeImage
                   src={logoSrc}
                   alt={config.logoAlt || shortNameText}
                   fill
-                  className="object-contain object-left"
+                  className="object-contain object-left border-0 outline-none ring-0 shadow-none"
                   priority
                 />
               </div>
             ) : (
-              <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-xl bg-brand-primary text-white flex items-center justify-center font-extrabold text-base tracking-wider shadow-md shadow-brand-primary/20 group-hover:scale-105 transition-transform">
+              <div className="flex items-center gap-2.5 border-0 outline-none ring-0 shadow-none">
+                <div className="w-10 h-10 rounded-xl bg-brand-primary text-white flex items-center justify-center font-extrabold text-base tracking-wider shadow-md shadow-brand-primary/20 group-hover:scale-105 transition-transform border-0">
                   {monogram}
                 </div>
-                <span className="font-extrabold text-lg text-foreground tracking-tight group-hover:text-brand-primary transition-colors">
+                <span className="font-extrabold text-lg text-foreground tracking-tight group-hover:text-brand-primary transition-colors border-0">
                   {shortNameText}
                 </span>
               </div>

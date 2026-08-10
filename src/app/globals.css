@@ -84,6 +84,14 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 
+/* Prevent outline rings on logo and header link elements */
+header a:focus,
+header a:focus-visible,
+header a:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /* Dynamic Brand Utility Helper Classes */
 .bg-brand-primary {
   background-color: var(--brand-primary);
