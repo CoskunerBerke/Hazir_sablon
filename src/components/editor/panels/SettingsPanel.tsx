@@ -3,12 +3,15 @@
 import React, { useState } from 'react';
 import { useSiteStore } from '@/store/use-site-store';
 import { downloadJsonFile, downloadZipBackup, parseAndValidateJsonFile } from '@/lib/storage/export-import';
-import { Download, Upload, RotateCcw, FileJson, Archive, Check, AlertCircle } from 'lucide-react';
+import { Download, Upload, RotateCcw, FileJson, Archive, Check, AlertCircle, Globe, Sun, Moon } from 'lucide-react';
 
 export const SettingsPanel: React.FC = () => {
-  const { config, setConfigDirectly, resetToDefault, updateConfig } = useSiteStore();
+  const { config, setConfigDirectly, resetToDefault, updateConfig, setLanguage, toggleThemeMode } = useSiteStore();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importStatus, setImportStatus] = useState<{ success?: boolean; message?: string } | null>(null);
+
+  const currentLang = config.language || 'tr';
+  const isDarkMode = config.theme?.mode === 'dark';
 
   const handleExportJson = () => {
     downloadJsonFile(config, `${config.business.shortName || 'site'}-config.json`);
@@ -39,7 +42,62 @@ export const SettingsPanel: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 1. Dışa ve İçe Aktarma */}
+      {/* 1. Dil & Tema Seçenekleri */}
+      <div className="p-4 rounded-2xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-200/80 dark:border-zinc-800 space-y-4">
+        <h4 className="text-sm font-bold text-foreground border-b border-slate-200/60 dark:border-zinc-700/60 pb-2 flex items-center gap-2">
+          <Globe className="w-4 h-4 text-brand-primary" />
+          Dil ve Görünüm Seçenekleri
+        </h4>
+
+        <div className="space-y-4">
+          {/* TR / EN Language Switcher */}
+          <div>
+            <label className="block text-xs font-bold text-muted mb-2">Web Sitesi Dili (Language)</label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => setLanguage('tr')}
+                className={`py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                  currentLang === 'tr'
+                    ? 'bg-brand-primary text-white shadow-md'
+                    : 'bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-foreground hover:bg-slate-100'
+                }`}
+              >
+                <span>🇹🇷 Türkçe (TR)</span>
+              </button>
+              <button
+                onClick={() => setLanguage('en')}
+                className={`py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                  currentLang === 'en'
+                    ? 'bg-brand-primary text-white shadow-md'
+                    : 'bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-foreground hover:bg-slate-100'
+                }`}
+              >
+                <span>🇬🇧 English (EN)</span>
+              </button>
+            </div>
+            <p className="text-[10px] text-muted mt-1">İngilizce seçildiğinde tüm başlıklar, menüler ve metinler İngilizceye çevrilir.</p>
+          </div>
+
+          {/* Dark / Light Mode Toggle */}
+          <div className="pt-2 border-t border-slate-200/60 dark:border-zinc-700/60 flex items-center justify-between">
+            <div>
+              <h5 className="text-xs font-bold text-foreground">Tema Modu (Karanlık / Aydınlık)</h5>
+              <p className="text-[10px] text-muted">Sitenin karanlık (dark) veya aydınlık (light) modu</p>
+            </div>
+            <button
+              onClick={toggleThemeMode}
+              className={`px-3 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5 transition-colors ${
+                isDarkMode ? 'bg-zinc-800 text-amber-400 border border-zinc-700' : 'bg-slate-200 text-slate-800'
+              }`}
+            >
+              {isDarkMode ? <Sun className="w-3.5 h-3.5 fill-amber-400/20" /> : <Moon className="w-3.5 h-3.5" />}
+              <span>{isDarkMode ? 'Karanlık Mod' : 'Aydınlık Mod'}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Dışa ve İçe Aktarma */}
       <div className="p-4 rounded-2xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-200/80 dark:border-zinc-800 space-y-4">
         <h4 className="text-sm font-bold text-foreground border-b border-slate-200/60 dark:border-zinc-700/60 pb-2 flex items-center gap-2">
           <Download className="w-4 h-4 text-brand-primary" />
@@ -47,7 +105,6 @@ export const SettingsPanel: React.FC = () => {
         </h4>
 
         <div className="space-y-3">
-          {/* Export JSON */}
           <button
             onClick={handleExportJson}
             className="w-full py-3 px-4 rounded-xl border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-bold text-foreground hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors flex items-center justify-between shadow-xs"
@@ -59,7 +116,6 @@ export const SettingsPanel: React.FC = () => {
             <Download className="w-4 h-4 text-muted" />
           </button>
 
-          {/* Export Full ZIP */}
           <button
             onClick={handleExportZip}
             className="w-full py-3 px-4 rounded-xl bg-brand-primary text-white text-xs font-bold hover:bg-brand-primary-hover transition-colors flex items-center justify-between shadow-md"
@@ -71,7 +127,6 @@ export const SettingsPanel: React.FC = () => {
             <Download className="w-4 h-4" />
           </button>
 
-          {/* Import JSON */}
           <div className="pt-2 border-t border-slate-200/60 dark:border-zinc-700/60">
             <label className="w-full py-3 px-4 rounded-xl border border-dashed border-slate-300 dark:border-zinc-700 bg-white/60 dark:bg-zinc-900/60 text-xs font-bold text-foreground hover:bg-slate-100 dark:hover:bg-zinc-800 cursor-pointer flex items-center justify-center gap-2">
               <Upload className="w-4 h-4 text-brand-primary" />
@@ -95,7 +150,7 @@ export const SettingsPanel: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Yayınlama ve Özellik Seçenekleri */}
+      {/* 3. Yayınlama ve Özellik Seçenekleri */}
       <div className="p-4 rounded-2xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-200/80 dark:border-zinc-800 space-y-4">
         <h4 className="text-sm font-bold text-foreground border-b border-slate-200/60 dark:border-zinc-700/60 pb-2">
           Görünürlük ve Yayın Ayarları
@@ -125,7 +180,7 @@ export const SettingsPanel: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Sıfırlama */}
+      {/* 4. Sıfırlama */}
       <div className="p-4 rounded-2xl bg-rose-500/5 border border-rose-500/20 space-y-3">
         <h4 className="text-sm font-bold text-rose-600 dark:text-rose-400">Tüm Değişiklikleri Sıfırla</h4>
         <p className="text-xs text-muted">

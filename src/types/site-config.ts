@@ -1,6 +1,7 @@
 export type ThemeMode = 'light' | 'dark' | 'auto';
 export type StylePresetId = 'minimal' | 'luxury' | 'warm' | 'editorial' | 'bold' | 'corporate';
 export type CtaType = 'whatsapp' | 'phone' | 'section' | 'custom';
+export type LanguageCode = 'tr' | 'en';
 
 export type HeroLayoutVariant =
   | 'text_left_image_right'
@@ -271,6 +272,7 @@ export interface FeaturesConfig {
 export interface SiteConfig {
   schemaVersion: number;
   isWizardCompleted: boolean;
+  language: LanguageCode;
 
   business: {
     name: string;
@@ -305,6 +307,6 @@ export interface SiteConfig {
   footerText?: string;
   copyrightText?: string;
 
-  sectionOrder: string[]; // e.g. ['hero', 'trust', 'about', 'services', 'special', 'gallery', 'reviews', 'contact']
+  sectionOrder: string[];
   sectionVisibility: Record<string, boolean>;
 }

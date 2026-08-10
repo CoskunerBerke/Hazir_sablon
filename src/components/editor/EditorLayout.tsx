@@ -27,6 +27,9 @@ import {
   ExternalLink,
   CheckCircle2,
   Sparkles,
+  Sun,
+  Moon,
+  Globe,
 } from 'lucide-react';
 
 export const EditorLayout: React.FC = () => {
@@ -43,11 +46,16 @@ export const EditorLayout: React.FC = () => {
     canRedo,
     isSaving,
     lastSavedAt,
+    setLanguage,
+    toggleThemeMode,
   } = useSiteStore();
 
   useEffect(() => {
     loadFromLocalStorage();
   }, [loadFromLocalStorage]);
+
+  const currentLang = config.language || 'tr';
+  const isDarkMode = config.theme?.mode === 'dark';
 
   const tabs: Array<{ id: PanelTab; label: string; icon: React.ReactNode }> = [
     { id: 'content', label: 'İçerik', icon: <FileText className="w-4 h-4" /> },
@@ -108,55 +116,90 @@ export const EditorLayout: React.FC = () => {
           </div>
         </div>
 
-        {/* Center: Viewport Switchers */}
-        <div className="flex items-center gap-1 bg-slate-100 dark:bg-zinc-800/60 p-1 rounded-xl border border-slate-200/60 dark:border-zinc-800">
+        {/* Center: Viewport Switchers & Language / Theme Controls */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-zinc-800/60 p-1 rounded-xl border border-slate-200/60 dark:border-zinc-800">
+            <button
+              onClick={() => setViewportMode('desktop')}
+              className={`p-1.5 rounded-lg text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary ${
+                viewportMode === 'desktop'
+                  ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
+                  : 'text-muted hover:text-foreground'
+              }`}
+              title="Masaüstü Görünümü"
+              aria-label="Masaüstü Görünümü"
+            >
+              <Monitor className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewportMode('tablet')}
+              className={`p-1.5 rounded-lg text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary ${
+                viewportMode === 'tablet'
+                  ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
+                  : 'text-muted hover:text-foreground'
+              }`}
+              title="Tablet Görünümü"
+              aria-label="Tablet Görünümü"
+            >
+              <Tablet className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewportMode('mobile')}
+              className={`p-1.5 rounded-lg text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary ${
+                viewportMode === 'mobile'
+                  ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
+                  : 'text-muted hover:text-foreground'
+              }`}
+              title="Mobil Görünümü"
+              aria-label="Mobil Görünümü"
+            >
+              <Smartphone className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewportMode(viewportMode === 'fullscreen' ? 'desktop' : 'fullscreen')}
+              className={`p-1.5 rounded-lg text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary ${
+                viewportMode === 'fullscreen'
+                  ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
+                  : 'text-muted hover:text-foreground'
+              }`}
+              title="Tam Ekran Önizle"
+              aria-label="Tam Ekran Önizle"
+            >
+              <Maximize2 className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* TR / EN Switcher Pill */}
+          <div className="hidden sm:flex items-center bg-slate-100 dark:bg-zinc-800 p-0.5 rounded-xl border border-slate-200 dark:border-zinc-800">
+            <button
+              onClick={() => setLanguage('tr')}
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all ${
+                currentLang === 'tr'
+                  ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
+                  : 'text-muted hover:text-foreground'
+              }`}
+            >
+              TR
+            </button>
+            <button
+              onClick={() => setLanguage('en')}
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-extrabold transition-all ${
+                currentLang === 'en'
+                  ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
+                  : 'text-muted hover:text-foreground'
+              }`}
+            >
+              EN
+            </button>
+          </div>
+
+          {/* Dark / Light Mode Toggle */}
           <button
-            onClick={() => setViewportMode('desktop')}
-            className={`p-1.5 rounded-lg text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary ${
-              viewportMode === 'desktop'
-                ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
-                : 'text-muted hover:text-foreground'
-            }`}
-            title="Masaüstü Görünümü"
-            aria-label="Masaüstü Görünümü"
+            onClick={toggleThemeMode}
+            className="p-2 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors"
+            title={isDarkMode ? 'Aydınlık Moda Geç' : 'Karanlık Moda Geç'}
           >
-            <Monitor className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => setViewportMode('tablet')}
-            className={`p-1.5 rounded-lg text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary ${
-              viewportMode === 'tablet'
-                ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
-                : 'text-muted hover:text-foreground'
-            }`}
-            title="Tablet Görünümü"
-            aria-label="Tablet Görünümü"
-          >
-            <Tablet className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => setViewportMode('mobile')}
-            className={`p-1.5 rounded-lg text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary ${
-              viewportMode === 'mobile'
-                ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
-                : 'text-muted hover:text-foreground'
-            }`}
-            title="Mobil Görünümü"
-            aria-label="Mobil Görünümü"
-          >
-            <Smartphone className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => setViewportMode(viewportMode === 'fullscreen' ? 'desktop' : 'fullscreen')}
-            className={`p-1.5 rounded-lg text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary ${
-              viewportMode === 'fullscreen'
-                ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
-                : 'text-muted hover:text-foreground'
-            }`}
-            title="Tam Ekran Önizle"
-            aria-label="Tam Ekran Önizle"
-          >
-            <Maximize2 className="w-4 h-4" />
+            {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
           </button>
         </div>
 

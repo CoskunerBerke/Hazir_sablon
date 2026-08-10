@@ -1,8 +1,9 @@
 import { create } from 'zustand';
-import { SiteConfig, StylePresetId } from '@/types/site-config';
+import { SiteConfig, StylePresetId, LanguageCode, ThemeMode } from '@/types/site-config';
 import { defaultSiteConfig } from '@/config/default-site-config';
 import { applySectorPreset } from '@/config/sector-presets';
 import { STYLE_PRESETS } from '@/config/style-presets';
+import { translateConfigToLanguage } from '@/lib/i18n';
 
 export type PanelTab = 'content' | 'sections' | 'design' | 'media' | 'contact' | 'settings';
 export type ViewportMode = 'desktop' | 'tablet' | 'mobile' | 'fullscreen';
@@ -27,6 +28,10 @@ interface SiteStoreState {
   updateConfig: (updater: (draft: SiteConfig) => void | SiteConfig, skipHistory?: boolean) => void;
   setConfigDirectly: (newConfig: SiteConfig) => void;
 
+  setLanguage: (lang: LanguageCode) => void;
+  toggleThemeMode: () => void;
+  setThemeMode: (mode: ThemeMode) => void;
+
   undo: () => void;
   redo: () => void;
   canUndo: () => boolean;
@@ -47,10 +52,6 @@ const MAX_HISTORY_STEPS = 30;
 
 let lastHistoryTimestamp = 0;
 
-/**
- * Migration helper to clear legacy stock photo paths (/assets/client/*)
- * from existing users' localStorage data while preserving custom uploads.
- */
 function migrateLegacyConfig(config: any): SiteConfig {
   if (!config) return defaultSiteConfig;
 
@@ -68,7 +69,6 @@ function migrateLegacyConfig(config: any): SiteConfig {
 
   const draft = JSON.parse(JSON.stringify(config));
 
-  // Clean stock photos
   if (isStockPhoto(draft.brand?.logo)) draft.brand.logo = '';
   if (isStockPhoto(draft.brand?.favicon)) draft.brand.favicon = '';
   if (isStockPhoto(draft.hero?.image)) draft.hero.image = '';
@@ -87,6 +87,7 @@ function migrateLegacyConfig(config: any): SiteConfig {
     });
   }
 
+  if (!draft.language) draft.language = 'tr';
   draft.schemaVersion = 2;
   return draft as SiteConfig;
 }
@@ -122,18 +123,35 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
     });
   },
 
+  setLanguage: (lang) => {
+    get().updateConfig((draft) => {
+      translateConfigToLanguage(draft, lang);
+    });
+  },
+
+  toggleThemeMode: () => {
+    get().updateConfig((draft) => {
+      const current = draft.theme.mode;
+      draft.theme.mode = current === 'dark' ? 'light' : 'dark';
+    });
+  },
+
+  setThemeMode: (mode) => {
+    get().updateConfig((draft) => {
+      draft.theme.mode = mode;
+    });
+  },
+
   updateConfig: (updater, skipHistory = false) => {
     const { config, pastHistory } = get();
     const now = Date.now();
 
-    // Push to history if not skipped and at least 1500ms since last history snapshot
     let newPast = pastHistory;
     if (!skipHistory && now - lastHistoryTimestamp > 1500) {
       newPast = [...pastHistory, config].slice(-MAX_HISTORY_STEPS);
       lastHistoryTimestamp = now;
     }
 
-    // Deep clone config to avoid direct mutation
     const draft = JSON.parse(JSON.stringify(config)) as SiteConfig;
     const result = updater(draft);
     const newConfig = result || draft;
@@ -146,7 +164,6 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
       lastSavedAt: new Date().toLocaleTimeString('tr-TR'),
     });
 
-    // Auto save
     get().saveToLocalStorage();
     setTimeout(() => set({ isSaving: false }), 300);
   },

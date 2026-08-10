@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Phone, MessageSquare, ArrowRight } from 'lucide-react';
+import { Menu, X, Phone, MessageSquare, ArrowRight, Sun, Moon, Globe } from 'lucide-react';
 import { SafeImage } from '../ui/SafeImage';
 import { formatPhoneLink, formatWhatsAppLink } from '@/lib/validation/phone';
+import { useSiteStore } from '@/store/use-site-store';
 
 interface HeaderProps {
   config: any;
@@ -16,11 +17,14 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('');
 
+  const { setLanguage, toggleThemeMode } = useSiteStore();
+  const currentLang = config.language || 'tr';
+  const isDarkMode = config.theme?.mode === 'dark';
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
 
-      // Section scroll spy
       const navItems = config.navigation || [];
       const sections = navItems.map((nav: any) => nav.href.replace('#', ''));
       const current = sections.find((section: string) => {
@@ -47,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
     .toUpperCase()
     .slice(0, 2) || 'İA';
 
-  const primaryCta = config.hero?.primaryCta || { text: 'İletişim', href: '#contact' };
+  const primaryCta = config.hero?.primaryCta || { text: currentLang === 'en' ? 'Contact Us' : 'İletişim', href: '#contact' };
   const logoSrc = config.logo || config.brand?.logo;
 
   const phoneLink = formatPhoneLink(config.contact?.phone);
@@ -67,11 +71,11 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          {/* Logo / Monogram Link (Clean without outline/ring/border) */}
+        <div className="flex items-center justify-between gap-4">
+          {/* Logo / Monogram Link */}
           <Link
             href="/"
-            className="flex items-center gap-3 group border-0 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:ring-0 select-none shadow-none"
+            className="flex items-center gap-3 group border-0 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:ring-0 select-none shadow-none shrink-0"
           >
             {logoSrc ? (
               <div className="relative h-10 w-36 sm:w-44 flex items-center overflow-hidden border-0 outline-none ring-0 shadow-none">
@@ -117,12 +121,48 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
             })}
           </nav>
 
-          {/* Right Action CTA */}
+          {/* Right Action CTA & Controls (TR/EN & Dark Mode) */}
           <div className="hidden lg:flex items-center gap-3">
+            {/* Language Switcher TR / EN */}
+            <div className="flex items-center bg-slate-100 dark:bg-zinc-900 p-1 rounded-full border border-slate-200 dark:border-zinc-800">
+              <button
+                onClick={() => setLanguage('tr')}
+                className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold transition-all ${
+                  currentLang === 'tr'
+                    ? 'bg-brand-primary text-white shadow-xs'
+                    : 'text-slate-600 dark:text-zinc-400 hover:text-foreground'
+                }`}
+                title="Türkçe Versiyona Geç"
+              >
+                TR
+              </button>
+              <button
+                onClick={() => setLanguage('en')}
+                className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold transition-all ${
+                  currentLang === 'en'
+                    ? 'bg-brand-primary text-white shadow-xs'
+                    : 'text-slate-600 dark:text-zinc-400 hover:text-foreground'
+                }`}
+                title="Switch to English Version"
+              >
+                EN
+              </button>
+            </div>
+
+            {/* Dark / Light Mode Toggle */}
+            <button
+              onClick={toggleThemeMode}
+              className="p-2 rounded-full bg-slate-100 dark:bg-zinc-900 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-800 border border-slate-200 dark:border-zinc-800 transition-colors focus:outline-none"
+              title={isDarkMode ? 'Aydınlık Moda Geç' : 'Karanlık Moda Geç'}
+              aria-label="Tema Modu Değiştir"
+            >
+              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400 fill-amber-400/20" /> : <Moon className="w-4 h-4 text-slate-700" />}
+            </button>
+
             {phoneLink && (
               <a
                 href={phoneLink}
-                className="hidden xl:flex items-center gap-2 text-xs font-semibold text-muted hover:text-foreground transition-colors px-3 py-2"
+                className="hidden xl:flex items-center gap-2 text-xs font-semibold text-muted hover:text-foreground transition-colors px-2 py-2"
               >
                 <Phone className="w-4 h-4 text-brand-primary" />
                 <span>{config.contact?.phoneFormatted || config.contact?.phone}</span>
@@ -140,14 +180,28 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
             </a>
           </div>
 
-          {/* Mobile Hamburger Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2.5 rounded-xl bg-slate-100 dark:bg-zinc-900 text-foreground hover:bg-slate-200 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
-            aria-label="Menüyü aç/kapat"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile Hamburger & Controls Button */}
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={() => setLanguage(currentLang === 'tr' ? 'en' : 'tr')}
+              className="px-2.5 py-1.5 rounded-xl text-xs font-extrabold bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-foreground"
+            >
+              {currentLang.toUpperCase()}
+            </button>
+            <button
+              onClick={toggleThemeMode}
+              className="p-2 rounded-xl bg-slate-100 dark:bg-zinc-900 text-foreground"
+            >
+              {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
+            </button>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2.5 rounded-xl bg-slate-100 dark:bg-zinc-900 text-foreground hover:bg-slate-200 dark:hover:bg-zinc-800 transition-colors focus:outline-none"
+              aria-label="Menüyü aç/kapat"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -186,7 +240,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
                 className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold border border-slate-200 dark:border-zinc-800 text-foreground hover:bg-slate-50 dark:hover:bg-zinc-900"
               >
                 <Phone className="w-4 h-4 text-brand-primary" />
-                <span>Bizi Arayın: {config.contact?.phoneFormatted || config.contact?.phone}</span>
+                <span>{config.contact?.phoneFormatted || config.contact?.phone}</span>
               </a>
             )}
           </div>

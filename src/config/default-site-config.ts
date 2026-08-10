@@ -2,11 +2,12 @@ import { SiteConfig } from '@/types/site-config';
 
 /**
  * NEUTRAL STARTER DEFAULT CONFIG
- * Clean starter template with infinite river Google reviews and neutral business content.
+ * Clean starter template with language support, dark/light mode, and neutral content.
  */
 export const defaultSiteConfig: SiteConfig = {
   schemaVersion: 2,
   isWizardCompleted: false,
+  language: 'tr',
 
   business: {
     name: 'İşletme Adınız',
