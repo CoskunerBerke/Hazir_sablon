@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { SiteConfig } from '@/types/site-config';
 import { generateCssVariablesFromConfig } from '@/lib/theme/theme-generator';
 import { t } from '@/i18n/translations';
+import { applyThemeToDocument } from '@/store/use-site-store';
 import { Header } from '../layout/Header';
 import { HeroSection } from '../sections/HeroSection';
 import { TrustSection } from '../sections/TrustSection';
@@ -36,11 +37,8 @@ export const SiteRenderer: React.FC<SiteRendererProps> = ({
   const isDark = theme?.mode === 'dark';
 
   useEffect(() => {
-    if (typeof document !== 'undefined') {
-      document.documentElement.lang = language || 'tr';
-      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-    }
-  }, [language, isDark]);
+    applyThemeToDocument(theme?.mode, language);
+  }, [theme?.mode, language]);
 
   const SECTION_BADGE_NAMES: Record<string, string> = {
     hero: language === 'en' ? 'Hero / Banner' : 'Giriş / Manşet',

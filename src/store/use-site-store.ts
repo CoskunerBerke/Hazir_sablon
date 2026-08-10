@@ -52,6 +52,15 @@ const MAX_HISTORY_STEPS = 30;
 
 let lastHistoryTimestamp = 0;
 
+export function applyThemeToDocument(mode: ThemeMode = 'light', lang: LanguageCode = 'tr') {
+  if (typeof document === 'undefined') return;
+  const isDark = mode === 'dark';
+  document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+  document.documentElement.classList.toggle('dark', isDark);
+  document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+  document.documentElement.lang = lang || 'tr';
+}
+
 function migrateLegacyConfig(config: any): SiteConfig {
   if (!config) return defaultSiteConfig;
 
@@ -156,6 +165,8 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
     const result = updater(draft);
     const newConfig = result || draft;
 
+    applyThemeToDocument(newConfig.theme?.mode, newConfig.language);
+
     set({
       config: newConfig,
       pastHistory: newPast,
@@ -171,6 +182,7 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
   setConfigDirectly: (newConfig) => {
     const { config, pastHistory } = get();
     const newPast = [...pastHistory, config].slice(-MAX_HISTORY_STEPS);
+    applyThemeToDocument(newConfig.theme?.mode, newConfig.language);
     set({
       config: newConfig,
       pastHistory: newPast,
@@ -188,6 +200,8 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
     const newPast = pastHistory.slice(0, pastHistory.length - 1);
     const newFuture = [config, ...futureHistory].slice(0, MAX_HISTORY_STEPS);
 
+    applyThemeToDocument(previous.theme?.mode, previous.language);
+
     set({
       config: previous,
       pastHistory: newPast,
@@ -203,6 +217,8 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
     const next = futureHistory[0];
     const newFuture = futureHistory.slice(1);
     const newPast = [...pastHistory, config].slice(-MAX_HISTORY_STEPS);
+
+    applyThemeToDocument(next.theme?.mode, next.language);
 
     set({
       config: next,
@@ -271,12 +287,15 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
       if (saved) {
         const parsed = JSON.parse(saved);
         const migrated = migrateLegacyConfig(parsed);
+        applyThemeToDocument(migrated.theme?.mode, migrated.language);
         set({ config: migrated });
       } else {
+        applyThemeToDocument(defaultSiteConfig.theme?.mode, defaultSiteConfig.language);
         set({ config: defaultSiteConfig });
       }
     } catch (e) {
       console.warn('Could not parse site config from localStorage:', e);
+      applyThemeToDocument(defaultSiteConfig.theme?.mode, defaultSiteConfig.language);
       set({ config: defaultSiteConfig });
     }
   },

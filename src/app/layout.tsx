@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { defaultSiteConfig } from '@/config/default-site-config';
-import { generateThemeCssVariables } from '@/lib/theme';
 
 const domainUrl = defaultSiteConfig.seo.domain && defaultSiteConfig.seo.domain.startsWith('http')
   ? defaultSiteConfig.seo.domain
@@ -31,24 +30,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const themeVars = generateThemeCssVariables(
-    defaultSiteConfig.theme.colors.primary,
-    defaultSiteConfig.theme.colors.secondary,
-    defaultSiteConfig.theme.colors.accent
-  );
-
   return (
-    <html
-      lang="tr"
-      data-style-preset={defaultSiteConfig.theme.preset}
-      className={defaultSiteConfig.theme.mode === 'dark' ? 'dark' : ''}
-    >
+    <html lang="tr" suppressHydrationWarning>
       <head>
-        <style dangerouslySetInnerHTML={{
-          __html: `:root { ${Object.entries(themeVars).map(([k, v]) => `${k}:${v};`).join('')} }`
-        }} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('site_builder_config_v1');
+                  if (saved) {
+                    var parsed = JSON.parse(saved);
+                    var mode = parsed?.theme?.mode || 'light';
+                    var isDark = mode === 'dark';
+                    document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+                    document.documentElement.classList.toggle('dark', isDark);
+                    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+                    if (parsed?.language) document.documentElement.lang = parsed.language;
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
       </head>
-      <body className="antialiased selection:bg-brand-primary selection:text-white">
+      <body className="antialiased selection:bg-brand-primary selection:text-white bg-background text-foreground transition-colors duration-300">
         {children}
       </body>
     </html>
