@@ -1,0 +1,45 @@
+'use client';
+
+import React from 'react';
+import { MessageSquare, Phone } from 'lucide-react';
+import { BusinessConfig } from '@/types/business';
+
+interface FloatingCTAProps {
+  config: BusinessConfig;
+}
+
+export const FloatingCTA: React.FC<FloatingCTAProps> = ({ config }) => {
+  if (!config.features.showFloatingWhatsapp) return null;
+
+  const whatsappMessage = encodeURIComponent(
+    config.contact.whatsappDefaultMessage || 'Merhaba, web siteniz üzerinden bilgi almak istiyorum.'
+  );
+  const whatsappUrl = `https://wa.me/${config.contact.whatsapp}?text=${whatsappMessage}`;
+
+  return (
+    <div className="md:hidden fixed bottom-5 right-5 z-40 flex flex-col gap-3 items-end">
+      {/* Phone Call Float */}
+      {config.contact.phone && (
+        <a
+          href={`tel:${config.contact.phone}`}
+          className="w-12 h-12 rounded-full bg-slate-900 text-white shadow-xl flex items-center justify-center border border-slate-700 active:scale-95 transition-transform"
+          aria-label="Telefonla Arayın"
+        >
+          <Phone className="w-5 h-5 text-brand-primary" />
+        </a>
+      )}
+
+      {/* WhatsApp Float Button */}
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-2.5 px-4 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-2xl shadow-emerald-600/40 active:scale-95 transition-all animate-bounce hover:animate-none"
+        aria-label="WhatsApp Canlı Destek"
+      >
+        <MessageSquare className="w-5 h-5 fill-current" />
+        <span className="pr-1">WhatsApp Danışma</span>
+      </a>
+    </div>
+  );
+};
