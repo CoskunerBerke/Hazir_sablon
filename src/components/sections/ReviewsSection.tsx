@@ -1,16 +1,16 @@
 import React from 'react';
-import { BusinessConfig } from '@/types/business';
 import { SectionHeader } from '../ui/SectionHeader';
 import { Star, Quote } from 'lucide-react';
 
 interface ReviewsSectionProps {
-  config: BusinessConfig;
+  config: any;
 }
 
 export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ config }) => {
-  const { reviews, features } = config;
+  const reviewItems = config.reviews?.items || config.reviews || [];
+  const features = config.features || {};
 
-  if (!features.showReviews || !reviews || reviews.length === 0) return null;
+  if (!reviewItems || reviewItems.length === 0) return null;
 
   return (
     <section id="reviews" className="py-20 md:py-28 bg-slate-50/60 dark:bg-zinc-950/60 border-t border-slate-200/60 dark:border-zinc-800/60">
@@ -22,13 +22,14 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ config }) => {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {reviews.map((rev) => {
-            const initials = rev.name
+          {reviewItems.map((rev: any) => {
+            const initials = (rev.name || 'M')
               .split(' ')
-              .map((n) => n[0])
+              .filter(Boolean)
+              .map((n: string) => n[0])
               .join('')
               .toUpperCase()
-              .slice(0, 2);
+              .slice(0, 2) || 'M';
 
             return (
               <div
@@ -39,7 +40,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ config }) => {
                   <div className="flex items-center justify-between">
                     {/* Stars */}
                     <div className="flex items-center gap-1 text-amber-400">
-                      {Array.from({ length: rev.rating }).map((_, i) => (
+                      {Array.from({ length: rev.rating || 5 }).map((_, i) => (
                         <Star key={i} className="w-4 h-4 fill-current" />
                       ))}
                     </div>

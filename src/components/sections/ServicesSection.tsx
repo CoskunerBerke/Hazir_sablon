@@ -6,13 +6,15 @@ import { DynamicIcon } from '../ui/DynamicIcon';
 import { Clock, MessageSquare, Tag } from 'lucide-react';
 
 interface ServicesSectionProps {
-  config: BusinessConfig;
+  config: any;
 }
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ config }) => {
-  const { services, contact, features } = config;
+  const serviceItems = config.services?.items || config.services || [];
+  const contact = config.contact || {};
+  const features = config.features || {};
 
-  if (!services || services.length === 0) return null;
+  if (!serviceItems || serviceItems.length === 0) return null;
 
   const whatsappMessage = encodeURIComponent(
     'Merhaba, hizmetleriniz hakkında bilgi ve fiyat detayları almak istiyorum.'
@@ -29,7 +31,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ config }) => {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service) => (
+          {serviceItems.map((service: any) => (
             <div
               key={service.id}
               className="group relative flex flex-col justify-between rounded-3xl bg-slate-50/70 dark:bg-zinc-800/50 border border-slate-200/80 dark:border-zinc-700/60 overflow-hidden hover:shadow-xl hover:border-brand-primary/40 transition-all duration-300"
@@ -84,7 +86,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ config }) => {
 
               {/* Price & Action */}
               <div className="p-6 pt-0 mt-2 border-t border-slate-200/50 dark:border-zinc-700/50 flex items-center justify-between gap-4">
-                {features.showPricing && service.price ? (
+                {service.price ? (
                   <div className="pt-3">
                     <span className="text-xs text-muted block">Fiyat</span>
                     <span className="text-base font-extrabold text-brand-primary">{service.price}</span>

@@ -1,21 +1,21 @@
 'use client';
 
 import React, { useState } from 'react';
-import { BusinessConfig } from '@/types/business';
 import { SectionHeader } from '../ui/SectionHeader';
 import { SafeImage } from '../ui/SafeImage';
 import { Lightbox } from '../ui/Lightbox';
 import { Maximize2 } from 'lucide-react';
 
 interface GallerySectionProps {
-  config: BusinessConfig;
+  config: any;
 }
 
 export const GallerySection: React.FC<GallerySectionProps> = ({ config }) => {
-  const { gallery, features } = config;
+  const galleryItems = config.gallery?.items || config.gallery || [];
+  const features = config.features || {};
   const [activeLightboxIndex, setActiveLightboxIndex] = useState<number | null>(null);
 
-  if (!features.showGallery || !gallery || gallery.length === 0) return null;
+  if (!galleryItems || galleryItems.length === 0) return null;
 
   return (
     <section id="gallery" className="py-20 md:py-28 bg-white dark:bg-zinc-900">
@@ -27,7 +27,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ config }) => {
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {gallery.map((item, index) => (
+          {galleryItems.map((item: any, index: number) => (
             <div
               key={item.id}
               onClick={() => setActiveLightboxIndex(index)}
@@ -64,7 +64,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ config }) => {
       </div>
 
       <Lightbox
-        items={gallery}
+        items={galleryItems}
         currentIndex={activeLightboxIndex}
         onClose={() => setActiveLightboxIndex(null)}
         onNavigate={(newIdx) => setActiveLightboxIndex(newIdx)}
