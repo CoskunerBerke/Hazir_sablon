@@ -24,8 +24,7 @@ export const metadata: Metadata = {
     description: defaultSiteConfig.seo.description,
   },
   other: {
-    'color-scheme': 'light',
-    'supported-color-schemes': 'light',
+    'color-scheme': 'light dark',
   },
 };
 
@@ -35,19 +34,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" data-theme="light" suppressHydrationWarning>
+    <html lang="tr" suppressHydrationWarning>
       <head>
-        <meta name="color-scheme" content="light" />
-        <meta name="theme-color" content="#ffffff" />
-        <meta name="supported-color-schemes" content="light" />
+        <meta name="color-scheme" content="light dark" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090b" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  document.documentElement.dataset.theme = 'light';
-                  document.documentElement.classList.remove('dark');
-                  document.documentElement.style.colorScheme = 'light';
                   var saved = localStorage.getItem('site_builder_config_v1');
                   if (saved) {
                     var parsed = JSON.parse(saved);

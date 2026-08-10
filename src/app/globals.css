@@ -1,10 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap');
 @import "tailwindcss";
 
-/* FORCE LIGHT COLOR SCHEME ACROSS ALL BROWSERS, MOBILE PHONES, AND OPERATING SYSTEMS */
-:root, html, body {
-  color-scheme: light !important;
-  supported-color-schemes: light !important;
+/* DEFAULT LIGHT THEME TOKENS */
+:root {
+  color-scheme: light dark;
 
   --color-background: #f8fafc;
   --color-surface: #ffffff;
@@ -36,34 +35,51 @@
   --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
-/* Force light colors even if dark class is added by browser extension */
+/* NATIVE SYSTEM DARK MODE SUPPORT FOR IOS SAFARI & MOBILE WEBKIT */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #09090b;
+    --color-surface: #18181b;
+    --color-surface-alt: #27272a;
+    --color-text: #f8fafc;
+    --color-text-muted: #a1a1aa;
+    --color-border: #27272a;
+
+    --background: var(--color-background);
+    --foreground: var(--color-text);
+    --surface: var(--color-surface);
+    --surface-card: var(--color-surface);
+    --surface-muted: var(--color-surface-alt);
+    --muted-foreground: var(--color-text-muted);
+    --border-color: var(--color-border);
+  }
+
+  input, textarea, select {
+    background-color: #27272a !important;
+    color: #f8fafc !important;
+    border-color: #3f3f46 !important;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: #a1a1aa !important;
+  }
+}
+
 .dark, [data-theme="dark"] {
-  color-scheme: light !important;
-  --color-background: #f8fafc;
-  --color-surface: #ffffff;
-  --color-surface-alt: #f1f5f9;
-  --color-text: #0f172a;
-  --color-text-muted: #64748b;
-  --color-border: #e2e8f0;
+  --color-background: #09090b;
+  --color-surface: #18181b;
+  --color-surface-alt: #27272a;
+  --color-text: #f8fafc;
+  --color-text-muted: #a1a1aa;
+  --color-border: #27272a;
 
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --surface: #ffffff;
-  --surface-card: #ffffff;
-  --surface-muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --border-color: #e2e8f0;
-}
-
-/* Force form inputs to render light background and dark text on mobile OS dark mode */
-input, textarea, select {
-  color-scheme: light !important;
-  background-color: #ffffff;
-  color: #0f172a;
-}
-
-input::placeholder, textarea::placeholder {
-  color: #94a3b8;
+  --background: #09090b;
+  --foreground: #f8fafc;
+  --surface: #18181b;
+  --surface-card: #18181b;
+  --surface-muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --border-color: #27272a;
 }
 
 /* STYLE PRESETS WITH DISTINCT UNMISTAKABLE VISUAL CHARACTERISTICS */
@@ -112,7 +128,6 @@ input::placeholder, textarea::placeholder {
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
-  color-scheme: light !important;
 }
 
 body {
@@ -121,7 +136,6 @@ body {
   font-family: var(--font-sans);
   overflow-x: hidden;
   line-height: 1.6;
-  color-scheme: light !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -196,6 +210,13 @@ p, span, h1, h2, h3, h4, h5, h6, label {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass-panel {
+    background: rgba(18, 18, 21, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
 }
 
 /* Left-to-Right Slow River Marquee Animation (Never stops on hover) */
