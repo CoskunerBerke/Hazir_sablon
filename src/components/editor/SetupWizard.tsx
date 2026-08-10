@@ -91,17 +91,17 @@ export const SetupWizard: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 animate-fadeIn">
       <div className="w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-zinc-800 overflow-hidden flex flex-col">
         {/* Header */}
         <div className="px-8 pt-8 pb-4 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-brand-primary text-[var(--color-on-primary)] flex items-center justify-center font-extrabold text-sm">
-              <Sparkles className="w-4 h-4" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-brand-primary text-white flex items-center justify-center font-extrabold text-sm shadow-md">
+              <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <h3 className="text-xl font-bold text-foreground">Web Site Sihirbazı</h3>
+            <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">Web Site Sihirbazı</h3>
           </div>
-          <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 dark:bg-zinc-800 text-muted">
+          <span className="text-xs font-extrabold px-3 py-1 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-zinc-700">
             Adım {step} / 6
           </span>
         </div>
@@ -112,13 +112,13 @@ export const SetupWizard: React.FC = () => {
           {step === 1 && (
             <div className="space-y-4 animate-fadeIn">
               <div className="space-y-1">
-                <h4 className="text-2xl font-extrabold text-foreground">İşletmenizin Adı Nedir?</h4>
-                <p className="text-sm text-muted">Web sitenizde ve başlık alanlarında görünecek resmi işletme adı.</p>
+                <h4 className="text-2xl font-extrabold text-slate-900 dark:text-white">İşletmenizin Adı Nedir?</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-300">Web sitenizde ve başlık alanlarında görünecek resmi işletme adı.</p>
               </div>
 
               <div className="space-y-4 pt-2">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
                     Tam İşletme Adı
                   </label>
                   <input
@@ -126,12 +126,12 @@ export const SetupWizard: React.FC = () => {
                     value={businessName}
                     onChange={(e) => setBusinessName(e.target.value)}
                     placeholder="Örn: Kuzey Danışmanlık & Mimarlık"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/50 text-foreground font-semibold focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
                     Kısa Marka Adı (Menü & Logo için)
                   </label>
                   <input
@@ -139,7 +139,7 @@ export const SetupWizard: React.FC = () => {
                     value={shortName}
                     onChange={(e) => setShortName(e.target.value)}
                     placeholder="Örn: Kuzey Mimarlık"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/50 text-foreground font-semibold focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 </div>
               </div>
@@ -150,8 +150,8 @@ export const SetupWizard: React.FC = () => {
           {step === 2 && (
             <div className="space-y-4 animate-fadeIn">
               <div className="space-y-1">
-                <h4 className="text-2xl font-extrabold text-foreground">Hangi Sektörde Hizmet Veriyorsunuz?</h4>
-                <p className="text-sm text-muted">Sektör seçimi sitenize uygun örnek hizmetleri ve bölüm yapısını önerir.</p>
+                <h4 className="text-2xl font-extrabold text-slate-900 dark:text-white">Hangi Sektörde Hizmet Veriyorsunuz?</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-300">Sektör seçimi sitenize uygun örnek hizmetleri ve bölüm yapısını önerir.</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
@@ -164,15 +164,15 @@ export const SetupWizard: React.FC = () => {
                       className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3 ${
                         isSelected
                           ? 'border-brand-primary bg-brand-light/30 ring-2 ring-brand-primary/20 shadow-md'
-                          : 'border-slate-200 dark:border-zinc-800 hover:border-brand-primary/40'
+                          : 'border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/80 hover:border-brand-primary/40'
                       }`}
                     >
-                      <div className="w-10 h-10 rounded-xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-brand-primary/10 text-brand-primary dark:text-blue-400 flex items-center justify-center shrink-0">
                         <DynamicIcon name={sec.iconName} className="w-5 h-5" />
                       </div>
                       <div>
-                        <h5 className="text-sm font-bold text-foreground">{sec.name}</h5>
-                        <p className="text-xs text-muted leading-tight mt-0.5">{sec.description}</p>
+                        <h5 className="text-sm font-bold text-slate-900 dark:text-white">{sec.name}</h5>
+                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-tight mt-0.5">{sec.description}</p>
                       </div>
                     </div>
                   );
@@ -185,11 +185,11 @@ export const SetupWizard: React.FC = () => {
           {step === 3 && (
             <div className="space-y-4 animate-fadeIn">
               <div className="space-y-1">
-                <h4 className="text-2xl font-extrabold text-foreground">Logonuz Var Mı?</h4>
-                <p className="text-sm text-muted">Logonuzu yükleyebilirsiniz veya şimdilik atlayıp otomatik Monogram logosu kullanabilirsiniz.</p>
+                <h4 className="text-2xl font-extrabold text-slate-900 dark:text-white">Logonuz Var Mı?</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-300">Logonuzu yükleyebilirsiniz veya şimdilik atlayıp otomatik Monogram logosu kullanabilirsiniz.</p>
               </div>
 
-              <div className="pt-4 flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-300 dark:border-zinc-700 rounded-3xl bg-slate-50/50 dark:bg-zinc-800/40 text-center">
+              <div className="pt-4 flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-300 dark:border-zinc-700 rounded-3xl bg-slate-50/50 dark:bg-zinc-800/60 text-center">
                 {logoUrl ? (
                   <div className="space-y-4">
                     <img src={logoUrl} alt="Logo Önizleme" className="h-16 object-contain mx-auto" />
@@ -202,12 +202,12 @@ export const SetupWizard: React.FC = () => {
                   </div>
                 ) : (
                   <label className="cursor-pointer space-y-3">
-                    <div className="w-14 h-14 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center mx-auto">
-                      <Upload className="w-6 h-6" />
+                    <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto">
+                      <Upload className="w-7 h-7" />
                     </div>
                     <div>
-                      <span className="text-sm font-bold text-brand-primary">Logo Fotoğrafı Seçin</span>
-                      <p className="text-xs text-muted mt-1">PNG, JPG, SVG veya WebP (Max 5MB)</p>
+                      <span className="text-sm font-extrabold text-blue-600 dark:text-blue-400 hover:underline">Logo Fotoğrafı Seçin</span>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 font-medium">PNG, JPG, SVG veya WebP (Max 5MB)</p>
                     </div>
                     <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
                   </label>
@@ -220,8 +220,8 @@ export const SetupWizard: React.FC = () => {
           {step === 4 && (
             <div className="space-y-4 animate-fadeIn">
               <div className="space-y-1">
-                <h4 className="text-2xl font-extrabold text-foreground">Ana Marka Renginizi Seçin</h4>
-                <p className="text-sm text-muted">Butonlar, bağlantılar ve vurgu alanları bu ana renkten türetilecektir.</p>
+                <h4 className="text-2xl font-extrabold text-slate-900 dark:text-white">Ana Marka Renginizi Seçin</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-300">Butonlar, bağlantılar ve vurgu alanları bu ana renkten türetilecektir.</p>
               </div>
 
               <div className="flex flex-wrap items-center gap-4 pt-4">
@@ -230,7 +230,7 @@ export const SetupWizard: React.FC = () => {
                     key={color}
                     onClick={() => setPrimaryColor(color)}
                     className={`w-12 h-12 rounded-2xl transition-transform flex items-center justify-center shadow-md ${
-                      primaryColor === color ? 'scale-110 ring-4 ring-slate-400 dark:ring-slate-600' : 'hover:scale-105'
+                      primaryColor === color ? 'scale-110 ring-4 ring-slate-400 dark:ring-slate-500' : 'hover:scale-105'
                     }`}
                     style={{ backgroundColor: color }}
                   >
@@ -240,7 +240,7 @@ export const SetupWizard: React.FC = () => {
               </div>
 
               <div className="pt-4">
-                <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-2">Özel HEX Rengi</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">Özel HEX Rengi</label>
                 <div className="flex items-center gap-3">
                   <input
                     type="color"
@@ -252,7 +252,7 @@ export const SetupWizard: React.FC = () => {
                     type="text"
                     value={primaryColor}
                     onChange={(e) => setPrimaryColor(e.target.value)}
-                    className="px-4 py-2 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800 text-foreground font-mono text-sm"
+                    className="px-4 py-2 rounded-xl border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 text-slate-900 dark:text-white font-mono text-sm"
                   />
                 </div>
               </div>
@@ -263,8 +263,8 @@ export const SetupWizard: React.FC = () => {
           {step === 5 && (
             <div className="space-y-4 animate-fadeIn">
               <div className="space-y-1">
-                <h4 className="text-2xl font-extrabold text-foreground">Tasarım Stilinizi Seçin</h4>
-                <p className="text-sm text-muted">Köşe yapısı, tipografi ve kart hissiyatını tek tıkla özelleştirin.</p>
+                <h4 className="text-2xl font-extrabold text-slate-900 dark:text-white">Tasarım Stilinizi Seçin</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-300">Köşe yapısı, tipografi ve kart hissiyatını tek tıkla özelleştirin.</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
@@ -277,7 +277,7 @@ export const SetupWizard: React.FC = () => {
                       className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3 ${
                         isSelected
                           ? 'border-brand-primary bg-brand-light/30 ring-2 ring-brand-primary/20 shadow-md'
-                          : 'border-slate-200 dark:border-zinc-800 hover:border-brand-primary/40'
+                          : 'border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/80 hover:border-brand-primary/40'
                       }`}
                     >
                       <div
@@ -285,8 +285,8 @@ export const SetupWizard: React.FC = () => {
                         style={{ backgroundColor: preset.previewColor }}
                       />
                       <div>
-                        <h5 className="text-sm font-bold text-foreground">{preset.name}</h5>
-                        <p className="text-xs text-muted leading-tight mt-0.5">{preset.description}</p>
+                        <h5 className="text-sm font-bold text-slate-900 dark:text-white">{preset.name}</h5>
+                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-tight mt-0.5">{preset.description}</p>
                       </div>
                     </div>
                   );
@@ -299,14 +299,14 @@ export const SetupWizard: React.FC = () => {
           {step === 6 && (
             <div className="space-y-4 animate-fadeIn">
               <div className="space-y-1">
-                <h4 className="text-2xl font-extrabold text-foreground">Müşterileriniz Size Nasıl Ulaşsın?</h4>
-                <p className="text-sm text-muted">Telefon ve WhatsApp bilgilerinizi girerek doğrudan arama ve mesaj alabilirsiniz (İsteğe bağlı).</p>
+                <h4 className="text-2xl font-extrabold text-slate-900 dark:text-white">Müşterileriniz Size Nasıl Ulaşsın?</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-300">Telefon ve WhatsApp bilgilerinizi girerek doğrudan arama ve mesaj alabilirsiniz (İsteğe bağlı).</p>
               </div>
 
               <div className="space-y-4 pt-2">
                 {/* Phone input */}
                 <div>
-                  <label htmlFor="wizard-phone" className="block text-xs font-bold uppercase tracking-wider text-muted mb-2">
+                  <label htmlFor="wizard-phone" className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
                     Telefon Numarası (Sadece rakam & +)
                   </label>
                   <input
@@ -319,10 +319,10 @@ export const SetupWizard: React.FC = () => {
                     aria-describedby={!phoneValidation.isValid ? 'w-phone-err' : undefined}
                     placeholder="Örn: +902125550011"
                     maxLength={16}
-                    className={`w-full px-4 py-3 rounded-xl border bg-slate-50 dark:bg-zinc-800/50 text-foreground font-semibold focus:outline-none focus:ring-2 ${
+                    className={`w-full px-4 py-3 rounded-xl border bg-slate-50 dark:bg-zinc-800 text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 ${
                       !phoneValidation.isValid
                         ? 'border-rose-500 ring-1 ring-rose-500/30'
-                        : 'border-slate-200 dark:border-zinc-800 focus:ring-brand-primary'
+                        : 'border-slate-200 dark:border-zinc-700 focus:ring-brand-primary'
                     }`}
                   />
                   {!phoneValidation.isValid && phoneValidation.error && (
@@ -335,7 +335,7 @@ export const SetupWizard: React.FC = () => {
 
                 {/* WhatsApp input */}
                 <div>
-                  <label htmlFor="wizard-whatsapp" className="block text-xs font-bold uppercase tracking-wider text-muted mb-2">
+                  <label htmlFor="wizard-whatsapp" className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
                     WhatsApp Numarası (Ülke Koduyla, 0 ile başlayamaz)
                   </label>
                   <input
@@ -348,10 +348,10 @@ export const SetupWizard: React.FC = () => {
                     aria-describedby={!whatsappValidation.isValid ? 'w-wa-err' : undefined}
                     placeholder="Örn: 905551234567"
                     maxLength={16}
-                    className={`w-full px-4 py-3 rounded-xl border bg-slate-50 dark:bg-zinc-800/50 text-foreground font-semibold focus:outline-none focus:ring-2 ${
+                    className={`w-full px-4 py-3 rounded-xl border bg-slate-50 dark:bg-zinc-800 text-slate-900 dark:text-white font-semibold focus:outline-none focus:ring-2 ${
                       !whatsappValidation.isValid
                         ? 'border-rose-500 ring-1 ring-rose-500/30'
-                        : 'border-slate-200 dark:border-zinc-800 focus:ring-brand-primary'
+                        : 'border-slate-200 dark:border-zinc-700 focus:ring-brand-primary'
                     }`}
                   />
                   {!whatsappValidation.isValid && whatsappValidation.error && (
@@ -371,7 +371,7 @@ export const SetupWizard: React.FC = () => {
           {step > 1 ? (
             <button
               onClick={() => setStep(step - 1)}
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-muted hover:text-foreground hover:bg-slate-200/60 dark:hover:bg-zinc-800 transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-extrabold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-zinc-800 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Geri</span>
@@ -383,7 +383,7 @@ export const SetupWizard: React.FC = () => {
           {step < 6 ? (
             <button
               onClick={() => setStep(step + 1)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs font-bold bg-brand-primary text-[var(--color-on-primary)] hover:bg-brand-primary-hover shadow-md transition-all hover:scale-[1.02]"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs font-bold bg-brand-primary text-white hover:bg-brand-primary-hover shadow-md transition-all hover:scale-[1.02]"
             >
               <span>Devam Et</span>
               <ArrowRight className="w-4 h-4" />
