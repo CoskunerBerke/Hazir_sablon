@@ -1,19 +1,20 @@
 import React from 'react';
-import { BusinessConfig } from '@/types/business';
 import { SectionHeader } from '../ui/SectionHeader';
 import { Phone, MessageSquare, Mail, MapPin, Clock, ExternalLink } from 'lucide-react';
 
 interface ContactSectionProps {
-  config: BusinessConfig;
+  config: any;
 }
 
 export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
-  const { contact, businessHours, features } = config;
+  const contact = config?.contact || {};
+  const businessHours = contact.businessHours || config?.businessHours || [];
+  const features = config?.features || {};
 
   const whatsappMessage = encodeURIComponent(
     contact.whatsappDefaultMessage || 'Merhaba, web siteniz üzerinden randevu ve bilgi almak istiyorum.'
   );
-  const whatsappUrl = `https://wa.me/${contact.whatsapp}?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/${contact.whatsapp || ''}?text=${whatsappMessage}`;
 
   return (
     <section id="contact" className="py-20 md:py-28 bg-white dark:bg-zinc-900">
@@ -119,7 +120,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
                 Çalışma Saatleri
               </h4>
               <div className="space-y-2 text-xs">
-                {businessHours.map((hrs, index) => (
+                {businessHours.map((hrs: any, index: number) => (
                   <div key={index} className="flex justify-between items-center py-1.5 border-b border-slate-200/50 dark:border-zinc-700/40">
                     <span className="font-medium text-foreground">{hrs.days}</span>
                     <span className={`font-semibold ${hrs.isOpen ? 'text-brand-primary' : 'text-rose-500'}`}>
@@ -134,7 +135,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
 
           {/* Right Column: Google Maps Embed / Directions */}
           <div className="lg:col-span-6 h-full">
-            {features.showMap && contact.mapsEmbedUrl ? (
+            {features.showMap !== false && contact.mapsEmbedUrl ? (
               <div className="relative w-full h-[450px] lg:h-full min-h-[420px] rounded-3xl overflow-hidden border border-slate-200/80 dark:border-zinc-800 shadow-xl">
                 <iframe
                   src={contact.mapsEmbedUrl}
@@ -144,7 +145,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title={`${config.businessName} Harita Konumu`}
+                  title="Harita Konumu"
                   className="w-full h-full"
                 />
               </div>
