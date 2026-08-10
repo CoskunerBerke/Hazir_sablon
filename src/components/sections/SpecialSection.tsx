@@ -1,48 +1,56 @@
 'use client';
 
 import React, { useState } from 'react';
-import { BusinessConfig, MenuItem } from '@/types/business';
 import { SectionHeader } from '../ui/SectionHeader';
 import { BeforeAfterSlider } from '../ui/BeforeAfterSlider';
 import { DynamicIcon } from '../ui/DynamicIcon';
 import { Check, MessageSquare } from 'lucide-react';
 
 interface SpecialSectionProps {
-  config: BusinessConfig;
+  config: any;
 }
 
 export const SpecialSection: React.FC<SpecialSectionProps> = ({ config }) => {
-  const { specialSection, features, contact } = config;
+  const { specialSection, features, contact } = config || {};
 
-  if (!features.showSpecialSection || !specialSection) return null;
+  const isEnabled = features?.showSpecialSection ?? specialSection?.enabled ?? true;
+  if (!isEnabled || !specialSection) return null;
+
+  const menuCategories = specialSection.menuCategories || [];
+  const menuItems = specialSection.menuItems || [];
+  const beforeAfterItems = specialSection.beforeAfterItems || [];
+  const steps = specialSection.steps || [];
+  const packages = specialSection.packages || [];
+  const faqs = specialSection.faqs || [];
 
   const [activeCategory, setActiveCategory] = useState<string>(
-    specialSection.menuCategories?.[0] || 'Tümü'
+    menuCategories[0] || 'Tümü'
   );
 
-  const whatsappUrl = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
+  const whatsappMessage = encodeURIComponent(
     'Merhaba, özel hizmet teklifiniz ve detaylar hakkında bilgi almak istiyorum.'
-  )}`;
+  );
+  const whatsappUrl = `https://wa.me/${contact?.whatsapp}?text=${whatsappMessage}`;
 
   return (
     <section id="special" className="py-20 md:py-28 bg-slate-50/70 dark:bg-zinc-950/70 border-y border-slate-200/60 dark:border-zinc-800/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          title={specialSection.title}
+          title={specialSection.title || 'Özel Bölüm'}
           subtitle={specialSection.subtitle}
         />
 
         {/* 1. STEPS / PROCESS LAYOUT */}
-        {specialSection.type === 'steps' && specialSection.steps && (
+        {specialSection.type === 'steps' && steps.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {specialSection.steps.map((item, idx) => (
+            {steps.map((item: any, idx: number) => (
               <div
                 key={idx}
                 className="relative p-6 rounded-3xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 shadow-md space-y-4 hover:border-brand-primary/50 transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-3xl font-extrabold text-brand-primary/40 font-mono">
-                    {item.step}
+                    {item.step || `0${idx + 1}`}
                   </span>
                   <div className="w-10 h-10 rounded-xl bg-brand-light text-brand-primary flex items-center justify-center">
                     <DynamicIcon name={item.iconName} className="w-5 h-5" />
@@ -56,9 +64,9 @@ export const SpecialSection: React.FC<SpecialSectionProps> = ({ config }) => {
         )}
 
         {/* 2. BEFORE / AFTER SLIDER LAYOUT */}
-        {specialSection.type === 'before_after' && specialSection.beforeAfterItems && (
+        {specialSection.type === 'before_after' && beforeAfterItems.length > 0 && (
           <div className="space-y-12 max-w-4xl mx-auto">
-            {specialSection.beforeAfterItems.map((item) => (
+            {beforeAfterItems.map((item: any) => (
               <BeforeAfterSlider
                 key={item.id}
                 beforeImage={item.beforeImage}
@@ -71,12 +79,12 @@ export const SpecialSection: React.FC<SpecialSectionProps> = ({ config }) => {
         )}
 
         {/* 3. MENU LAYOUT (CAFE / RESTAURANT) */}
-        {specialSection.type === 'menu' && specialSection.menuItems && (
+        {specialSection.type === 'menu' && menuItems.length > 0 && (
           <div className="space-y-8">
             {/* Category tabs */}
-            {specialSection.menuCategories && (
+            {menuCategories.length > 0 && (
               <div className="flex flex-wrap items-center justify-center gap-2">
-                {specialSection.menuCategories.map((cat) => (
+                {menuCategories.map((cat: string) => (
                   <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
@@ -94,12 +102,12 @@ export const SpecialSection: React.FC<SpecialSectionProps> = ({ config }) => {
 
             {/* Menu Items Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              {specialSection.menuItems
+              {menuItems
                 .filter(
-                  (item: MenuItem) =>
+                  (item: any) =>
                     activeCategory === 'Tümü' || item.category === activeCategory
                 )
-                .map((item: MenuItem) => (
+                .map((item: any) => (
                   <div
                     key={item.id}
                     className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200/70 dark:border-zinc-800 flex items-start justify-between gap-4 shadow-sm"
@@ -125,9 +133,9 @@ export const SpecialSection: React.FC<SpecialSectionProps> = ({ config }) => {
         )}
 
         {/* 4. PACKAGES COMPARISON */}
-        {specialSection.type === 'packages' && specialSection.packages && (
+        {specialSection.type === 'packages' && packages.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {specialSection.packages.map((pkg) => (
+            {packages.map((pkg: any) => (
               <div
                 key={pkg.id}
                 className={`relative flex flex-col justify-between p-8 rounded-3xl bg-white dark:bg-zinc-900 border transition-all ${
@@ -154,7 +162,7 @@ export const SpecialSection: React.FC<SpecialSectionProps> = ({ config }) => {
                   </div>
 
                   <ul className="space-y-3 pt-4 border-t border-slate-200 dark:border-zinc-800 text-xs">
-                    {pkg.features.map((feat, fIdx) => (
+                    {(pkg.features || []).map((feat: string, fIdx: number) => (
                       <li key={fIdx} className="flex items-center gap-2.5 text-foreground">
                         <Check className="w-4 h-4 text-brand-primary shrink-0" />
                         <span>{feat}</span>
