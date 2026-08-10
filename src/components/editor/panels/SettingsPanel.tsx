@@ -3,15 +3,14 @@
 import React, { useState } from 'react';
 import { useSiteStore } from '@/store/use-site-store';
 import { downloadJsonFile, downloadZipBackup, parseAndValidateJsonFile } from '@/lib/storage/export-import';
-import { Download, Upload, RotateCcw, FileJson, Archive, Check, AlertCircle, Globe, Sun, Moon } from 'lucide-react';
+import { Download, Upload, RotateCcw, FileJson, Archive, Check, AlertCircle, Globe } from 'lucide-react';
 
 export const SettingsPanel: React.FC = () => {
-  const { config, setConfigDirectly, resetToDefault, updateConfig, setLanguage, toggleThemeMode } = useSiteStore();
+  const { config, setConfigDirectly, resetToDefault, updateConfig, setLanguage } = useSiteStore();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importStatus, setImportStatus] = useState<{ success?: boolean; message?: string } | null>(null);
 
   const currentLang = config.language || 'tr';
-  const isDarkMode = config.theme?.mode === 'dark';
 
   const handleExportJson = () => {
     downloadJsonFile(config, `${config.business.shortName || 'site'}-config.json`);
@@ -42,11 +41,11 @@ export const SettingsPanel: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 1. Dil & Tema Seçenekleri */}
+      {/* 1. Dil Seçenekleri */}
       <div className="p-4 rounded-2xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-200/80 dark:border-zinc-800 space-y-4">
         <h4 className="text-sm font-bold text-foreground border-b border-slate-200/60 dark:border-zinc-700/60 pb-2 flex items-center gap-2">
           <Globe className="w-4 h-4 text-brand-primary" />
-          Dil ve Görünüm Seçenekleri
+          Web Sitesi Dil Seçimi
         </h4>
 
         <div className="space-y-4">
@@ -76,23 +75,6 @@ export const SettingsPanel: React.FC = () => {
               </button>
             </div>
             <p className="text-[10px] text-muted mt-1">İngilizce seçildiğinde tüm başlıklar, menüler ve metinler İngilizceye çevrilir.</p>
-          </div>
-
-          {/* Dark / Light Mode Toggle */}
-          <div className="pt-2 border-t border-slate-200/60 dark:border-zinc-700/60 flex items-center justify-between">
-            <div>
-              <h5 className="text-xs font-bold text-foreground">Tema Modu (Karanlık / Aydınlık)</h5>
-              <p className="text-[10px] text-muted">Sitenin karanlık (dark) veya aydınlık (light) modu</p>
-            </div>
-            <button
-              onClick={toggleThemeMode}
-              className={`px-3 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5 transition-colors ${
-                isDarkMode ? 'bg-zinc-800 text-amber-400 border border-zinc-700' : 'bg-slate-200 text-slate-800'
-              }`}
-            >
-              {isDarkMode ? <Sun className="w-3.5 h-3.5 fill-amber-400/20" /> : <Moon className="w-3.5 h-3.5" />}
-              <span>{isDarkMode ? 'Karanlık Mod' : 'Aydınlık Mod'}</span>
-            </button>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSiteStore } from '@/store/use-site-store';
-import { extractContent, getEffectiveConfig } from '@/lib/i18n';
+import { extractContent, syncEffectiveConfig } from '@/lib/i18n';
 import { LanguageCode } from '@/types/site-config';
 import { Plus, Trash2, ChevronDown, ChevronUp, Globe } from 'lucide-react';
 
@@ -37,7 +37,7 @@ export const ContentPanel: React.FC = () => {
   // Get active localized content object for currently selected editing language
   const content = (config as any).i18nContent?.[editingLang] || extractContent(config, editingLang);
 
-  // Helper to mutate i18nContent for editingLang safely
+  // Helper to mutate i18nContent for editingLang safely without object replacement flicker
   const updateContent = (updater: (c: any) => void) => {
     updateConfig((draft) => {
       if (!(draft as any).i18nContent) {
@@ -47,10 +47,7 @@ export const ContentPanel: React.FC = () => {
         };
       }
       updater((draft as any).i18nContent[editingLang]);
-
-      // Sync effective config for editing language
-      const eff = getEffectiveConfig(draft, editingLang);
-      Object.assign(draft, eff);
+      syncEffectiveConfig(draft, editingLang);
     });
   };
 

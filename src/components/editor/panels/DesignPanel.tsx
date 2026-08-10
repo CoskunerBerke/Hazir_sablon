@@ -5,7 +5,7 @@ import { useSiteStore } from '@/store/use-site-store';
 import { STYLE_PRESETS } from '@/config/style-presets';
 import { StylePresetId } from '@/types/site-config';
 import { getContrastTextColor } from '@/lib/theme';
-import { Palette, Type, Sliders, AlertTriangle } from 'lucide-react';
+import { Palette, Type, Sliders } from 'lucide-react';
 
 export const DesignPanel: React.FC = () => {
   const { config, updateConfig, applyStylePreset } = useSiteStore();
@@ -140,24 +140,6 @@ export const DesignPanel: React.FC = () => {
                 className="px-3 py-2 rounded-xl border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-foreground font-mono text-xs w-32"
               />
             </div>
-          </div>
-
-          {/* Theme Mode */}
-          <div>
-            <label className="block text-xs font-bold text-muted mb-1">Arayüz Modu</label>
-            <select
-              value={theme.mode}
-              onChange={(e) =>
-                updateConfig((draft) => {
-                  draft.theme.mode = e.target.value as any;
-                })
-              }
-              className="w-full px-3 py-2 rounded-xl text-xs font-medium border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-foreground"
-            >
-              <option value="auto">Otomatik (Sistem Tercihi)</option>
-              <option value="light">Açık Tema (Light)</option>
-              <option value="dark">Koyu Tema (Dark)</option>
-            </select>
           </div>
         </div>
       </div>

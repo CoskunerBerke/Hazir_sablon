@@ -288,144 +288,136 @@ export function extractContent(config: SiteConfig, lang: LanguageCode) {
 }
 
 /**
+ * Mutates draft in place with effective localized content without object replacement
+ */
+export function syncEffectiveConfig(draft: SiteConfig, lang: LanguageCode) {
+  if (!(draft as any).i18nContent) {
+    (draft as any).i18nContent = {
+      tr: extractContent(draft, 'tr'),
+      en: extractContent(draft, 'en'),
+    };
+  }
+
+  const content = (draft as any).i18nContent[lang];
+  if (!content) return;
+
+  if (content.navigation && Array.isArray(content.navigation) && Array.isArray(draft.navigation)) {
+    content.navigation.forEach((nav: any, idx: number) => {
+      if (draft.navigation[idx]) {
+        draft.navigation[idx].label = nav.label || draft.navigation[idx].label;
+      }
+    });
+  }
+
+  if (content.business) {
+    if (content.business.name !== undefined) draft.business.name = content.business.name;
+    if (content.business.shortName !== undefined) draft.business.shortName = content.business.shortName;
+    if (content.business.industry !== undefined) draft.business.industry = content.business.industry;
+    if (content.business.tagline !== undefined) draft.business.tagline = content.business.tagline;
+    if (content.business.description !== undefined) draft.business.description = content.business.description;
+  }
+
+  if (content.hero) {
+    if (content.hero.badge !== undefined) draft.hero.badge = content.hero.badge;
+    if (content.hero.title !== undefined) draft.hero.title = content.hero.title;
+    if (content.hero.description !== undefined) draft.hero.description = content.hero.description;
+    if (content.hero.primaryCtaText !== undefined && draft.hero.primaryCta) draft.hero.primaryCta.text = content.hero.primaryCtaText;
+    if (content.hero.secondaryCtaText !== undefined && draft.hero.secondaryCta) draft.hero.secondaryCta.text = content.hero.secondaryCtaText;
+  }
+
+  if (Array.isArray(content.trustPoints) && Array.isArray(draft.trustPoints)) {
+    content.trustPoints.forEach((tp: any, idx: number) => {
+      if (draft.trustPoints[idx]) {
+        draft.trustPoints[idx].title = tp.title || '';
+        draft.trustPoints[idx].description = tp.description || '';
+      }
+    });
+  }
+
+  if (content.about) {
+    if (content.about.badge !== undefined) draft.about.badge = content.about.badge;
+    if (content.about.title !== undefined) draft.about.title = content.about.title;
+    if (content.about.subtitle !== undefined) draft.about.subtitle = content.about.subtitle;
+    if (Array.isArray(content.about.text)) draft.about.text = [...content.about.text];
+    if (Array.isArray(content.about.highlights)) draft.about.highlights = [...content.about.highlights];
+  }
+
+  if (content.services) {
+    if (content.services.badge !== undefined) (draft.services as any).badge = content.services.badge;
+    if (content.services.title !== undefined) (draft.services as any).title = content.services.title;
+    if (content.services.subtitle !== undefined) (draft.services as any).subtitle = content.services.subtitle;
+
+    if (Array.isArray(content.services.items) && Array.isArray(draft.services.items)) {
+      content.services.items.forEach((item: any, idx: number) => {
+        if (draft.services.items[idx]) {
+          draft.services.items[idx].title = item.title || '';
+          draft.services.items[idx].description = item.description || '';
+          if (item.price !== undefined) draft.services.items[idx].price = item.price;
+          if (item.category !== undefined) draft.services.items[idx].category = item.category;
+          if (item.buttonText !== undefined) draft.services.items[idx].buttonText = item.buttonText;
+        }
+      });
+    }
+  }
+
+  if (content.specialSection) {
+    if (content.specialSection.badge !== undefined) (draft.specialSection as any).badge = content.specialSection.badge;
+    if (content.specialSection.title !== undefined) draft.specialSection.title = content.specialSection.title;
+    if (content.specialSection.subtitle !== undefined) draft.specialSection.subtitle = content.specialSection.subtitle;
+
+    const steps = draft.specialSection?.steps;
+    if (Array.isArray(content.specialSection.steps) && Array.isArray(steps)) {
+      content.specialSection.steps.forEach((st: any, idx: number) => {
+        if (steps[idx]) {
+          steps[idx].title = st.title || '';
+          steps[idx].description = st.description || '';
+        }
+      });
+    }
+  }
+
+  if (content.gallery) {
+    if (content.gallery.badge !== undefined) (draft.gallery as any).badge = content.gallery.badge;
+    if (content.gallery.title !== undefined) (draft.gallery as any).title = content.gallery.title;
+    if (content.gallery.subtitle !== undefined) (draft.gallery as any).subtitle = content.gallery.subtitle;
+  }
+
+  if (content.reviews) {
+    if (content.reviews.badge !== undefined) (draft.reviews as any).badge = content.reviews.badge;
+    if (content.reviews.title !== undefined) (draft.reviews as any).title = content.reviews.title;
+    if (content.reviews.subtitle !== undefined) (draft.reviews as any).subtitle = content.reviews.subtitle;
+
+    const revItems = draft.reviews?.items;
+    if (Array.isArray(content.reviews.items) && Array.isArray(revItems)) {
+      content.reviews.items.forEach((rev: any, idx: number) => {
+        if (revItems[idx]) {
+          revItems[idx].name = rev.name || '';
+          revItems[idx].role = rev.role || '';
+          revItems[idx].comment = rev.comment || '';
+        }
+      });
+    }
+  }
+
+  if (content.contact) {
+    if (content.contact.badge !== undefined) (draft.contact as any).badge = content.contact.badge;
+    if (content.contact.title !== undefined) (draft.contact as any).title = content.contact.title;
+    if (content.contact.subtitle !== undefined) (draft.contact as any).subtitle = content.contact.subtitle;
+    if (content.contact.address !== undefined) draft.contact.address = content.contact.address;
+  }
+
+  if (content.features?.announcementText && draft.features) {
+    draft.features.announcementText = content.features.announcementText;
+  }
+}
+
+/**
  * Returns a cloned SiteConfig with effective localized texts for the given language
  */
 export function getEffectiveConfig(config: SiteConfig, lang: LanguageCode = 'tr'): SiteConfig {
   const effective = JSON.parse(JSON.stringify(config)) as SiteConfig;
   effective.language = lang;
-
-  // Initialize i18nContent container if missing
-  if (!(effective as any).i18nContent) {
-    (effective as any).i18nContent = {
-      tr: extractContent(config, 'tr'),
-      en: extractContent(config, 'en'),
-    };
-  }
-
-  const content = (effective as any).i18nContent[lang] || extractContent(config, lang);
-
-  // Apply localized navigation
-  if (Array.isArray(content.navigation) && Array.isArray(effective.navigation)) {
-    content.navigation.forEach((nav: any, idx: number) => {
-      if (effective.navigation[idx]) {
-        effective.navigation[idx].label = nav.label || effective.navigation[idx].label;
-      }
-    });
-  }
-
-  // Apply localized business
-  if (content.business) {
-    effective.business.name = content.business.name || effective.business.name;
-    effective.business.shortName = content.business.shortName || effective.business.shortName;
-    effective.business.industry = content.business.industry || effective.business.industry;
-    effective.business.tagline = content.business.tagline || effective.business.tagline;
-    effective.business.description = content.business.description || effective.business.description;
-  }
-
-  // Apply localized hero
-  if (content.hero) {
-    effective.hero.badge = content.hero.badge ?? effective.hero.badge;
-    effective.hero.title = content.hero.title || effective.hero.title;
-    effective.hero.description = content.hero.description || effective.hero.description;
-    if (effective.hero.primaryCta) effective.hero.primaryCta.text = content.hero.primaryCtaText || effective.hero.primaryCta.text;
-    if (effective.hero.secondaryCta) effective.hero.secondaryCta.text = content.hero.secondaryCtaText || effective.hero.secondaryCta.text;
-  }
-
-  // Apply localized trust points
-  if (Array.isArray(content.trustPoints) && Array.isArray(effective.trustPoints)) {
-    content.trustPoints.forEach((tp: any, idx: number) => {
-      if (effective.trustPoints[idx]) {
-        effective.trustPoints[idx].title = tp.title || effective.trustPoints[idx].title;
-        effective.trustPoints[idx].description = tp.description || effective.trustPoints[idx].description;
-      }
-    });
-  }
-
-  // Apply localized about
-  if (content.about) {
-    effective.about.badge = content.about.badge ?? effective.about.badge;
-    effective.about.title = content.about.title || effective.about.title;
-    effective.about.subtitle = content.about.subtitle ?? effective.about.subtitle;
-    if (Array.isArray(content.about.text)) effective.about.text = content.about.text;
-    if (Array.isArray(content.about.highlights)) effective.about.highlights = content.about.highlights;
-  }
-
-  // Apply localized services
-  if (content.services) {
-    (effective.services as any).badge = content.services.badge ?? (effective.services as any).badge;
-    (effective.services as any).title = content.services.title || (effective.services as any).title;
-    (effective.services as any).subtitle = content.services.subtitle ?? (effective.services as any).subtitle;
-
-    if (Array.isArray(content.services.items) && Array.isArray(effective.services?.items)) {
-      content.services.items.forEach((item: any, idx: number) => {
-        if (effective.services.items[idx]) {
-          effective.services.items[idx].title = item.title || effective.services.items[idx].title;
-          effective.services.items[idx].description = item.description || effective.services.items[idx].description;
-          if (item.price) effective.services.items[idx].price = item.price;
-          if (item.duration) effective.services.items[idx].duration = item.duration;
-          if (item.category) effective.services.items[idx].category = item.category;
-          if (item.buttonText) effective.services.items[idx].buttonText = item.buttonText;
-        }
-      });
-    }
-  }
-
-  // Apply localized specialSection
-  if (content.specialSection) {
-    (effective.specialSection as any).badge = content.specialSection.badge ?? (effective.specialSection as any).badge;
-    effective.specialSection.title = content.specialSection.title || effective.specialSection.title;
-    effective.specialSection.subtitle = content.specialSection.subtitle ?? effective.specialSection.subtitle;
-
-    const steps = effective.specialSection?.steps;
-    if (Array.isArray(content.specialSection.steps) && Array.isArray(steps)) {
-      content.specialSection.steps.forEach((st: any, idx: number) => {
-        if (steps[idx]) {
-          steps[idx].title = st.title || steps[idx].title;
-          steps[idx].description = st.description || steps[idx].description;
-        }
-      });
-    }
-  }
-
-  // Apply localized gallery
-  if (content.gallery) {
-    (effective.gallery as any).badge = content.gallery.badge ?? (effective.gallery as any).badge;
-    (effective.gallery as any).title = content.gallery.title || (effective.gallery as any).title;
-    (effective.gallery as any).subtitle = content.gallery.subtitle ?? (effective.gallery as any).subtitle;
-  }
-
-  // Apply localized reviews
-  if (content.reviews) {
-    (effective.reviews as any).badge = content.reviews.badge ?? (effective.reviews as any).badge;
-    (effective.reviews as any).title = content.reviews.title || (effective.reviews as any).title;
-    (effective.reviews as any).subtitle = content.reviews.subtitle ?? (effective.reviews as any).subtitle;
-
-    const revItems = effective.reviews?.items;
-    if (Array.isArray(content.reviews.items) && Array.isArray(revItems)) {
-      content.reviews.items.forEach((rev: any, idx: number) => {
-        if (revItems[idx]) {
-          revItems[idx].name = rev.name || revItems[idx].name;
-          revItems[idx].role = rev.role || revItems[idx].role;
-          revItems[idx].comment = rev.comment || revItems[idx].comment;
-          if (rev.date) revItems[idx].date = rev.date;
-        }
-      });
-    }
-  }
-
-  // Apply localized contact
-  if (content.contact) {
-    (effective.contact as any).badge = content.contact.badge ?? (effective.contact as any).badge;
-    (effective.contact as any).title = content.contact.title || (effective.contact as any).title;
-    (effective.contact as any).subtitle = content.contact.subtitle ?? (effective.contact as any).subtitle;
-    if (content.contact.address) effective.contact.address = content.contact.address;
-  }
-
-  // Apply features announcementText
-  if (content.features?.announcementText && effective.features) {
-    effective.features.announcementText = content.features.announcementText;
-  }
-
+  syncEffectiveConfig(effective, lang);
   return effective;
 }
 
@@ -434,5 +426,6 @@ export function getEffectiveConfig(config: SiteConfig, lang: LanguageCode = 'tr'
  */
 export function translateConfigToLanguage(draft: SiteConfig, lang: 'tr' | 'en') {
   draft.language = lang;
-  return getEffectiveConfig(draft, lang);
+  syncEffectiveConfig(draft, lang);
+  return draft;
 }
