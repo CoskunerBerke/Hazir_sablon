@@ -1,35 +1,37 @@
-import React from 'react';
-import { businessConfig } from '@/config/business';
-import { Header } from '@/components/layout/Header';
-import { HeroSection } from '@/components/sections/HeroSection';
-import { TrustSection } from '@/components/sections/TrustSection';
-import { AboutSection } from '@/components/sections/AboutSection';
-import { ServicesSection } from '@/components/sections/ServicesSection';
-import { SpecialSection } from '@/components/sections/SpecialSection';
-import { GallerySection } from '@/components/sections/GallerySection';
-import { ReviewsSection } from '@/components/sections/ReviewsSection';
-import { ContactSection } from '@/components/sections/ContactSection';
-import { Footer } from '@/components/layout/Footer';
-import { FloatingCTA } from '@/components/layout/FloatingCTA';
+'use client';
+
+import React, { useEffect } from 'react';
+import Link from 'next/link';
+import { useSiteStore } from '@/store/use-site-store';
+import { SiteRenderer } from '@/components/site/SiteRenderer';
+import { Sparkles, Edit3 } from 'lucide-react';
 
 export default function Home() {
-  return (
-    <div className="min-h-screen flex flex-col justify-between">
-      <Header config={businessConfig} />
-      
-      <main className="flex-1">
-        <HeroSection config={businessConfig} />
-        <TrustSection config={businessConfig} />
-        <AboutSection config={businessConfig} />
-        <ServicesSection config={businessConfig} />
-        <SpecialSection config={businessConfig} />
-        <GallerySection config={businessConfig} />
-        <ReviewsSection config={businessConfig} />
-        <ContactSection config={businessConfig} />
-      </main>
+  const { config, loadFromLocalStorage } = useSiteStore();
 
-      <Footer config={businessConfig} />
-      <FloatingCTA config={businessConfig} />
+  useEffect(() => {
+    loadFromLocalStorage();
+  }, [loadFromLocalStorage]);
+
+  const showDemoButton = config.features.showDemoButton !== false;
+
+  return (
+    <div className="relative min-h-screen">
+      <SiteRenderer config={config} isEditorPreview={false} />
+
+      {/* Floating Demo Trigger Button to Open /editor */}
+      {showDemoButton && (
+        <div className="fixed top-20 right-5 z-50 animate-bounce hover:animate-none">
+          <Link
+            href="/editor"
+            className="flex items-center gap-2 px-5 py-3 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-extrabold text-xs shadow-2xl border border-white/20 hover:scale-105 transition-all"
+          >
+            <Sparkles className="w-4 h-4 text-brand-primary fill-current" />
+            <span>Sitenizi Özelleştirin (Visual Editor)</span>
+            <Edit3 className="w-3.5 h-3.5 opacity-60" />
+          </Link>
+        </div>
+      )}
     </div>
   );
-}
+};
