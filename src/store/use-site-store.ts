@@ -44,6 +44,50 @@ interface SiteStoreState {
 const LOCAL_STORAGE_KEY = 'site_builder_config_v1';
 const MAX_HISTORY_STEPS = 30;
 
+/**
+ * Migration helper to clear legacy stock photo paths (/assets/client/*)
+ * from existing users' localStorage data while preserving custom uploads.
+ */
+function migrateLegacyConfig(config: any): SiteConfig {
+  if (!config) return defaultSiteConfig;
+
+  const isStockPhoto = (url?: string) => {
+    if (!url) return false;
+    return (
+      url.includes('/assets/client/') ||
+      url.includes('hero.jpg') ||
+      url.includes('about.jpg') ||
+      url.includes('service-') ||
+      url.includes('gallery-') ||
+      url.includes('logo.svg')
+    );
+  };
+
+  const draft = JSON.parse(JSON.stringify(config));
+
+  // Clean stock photos
+  if (isStockPhoto(draft.brand?.logo)) draft.brand.logo = '';
+  if (isStockPhoto(draft.brand?.favicon)) draft.brand.favicon = '';
+  if (isStockPhoto(draft.hero?.image)) draft.hero.image = '';
+  if (isStockPhoto(draft.about?.image)) draft.about.image = '';
+  if (isStockPhoto(draft.seo?.ogImage)) draft.seo.ogImage = '';
+
+  if (Array.isArray(draft.services?.items)) {
+    draft.services.items.forEach((item: any) => {
+      if (isStockPhoto(item.image)) item.image = '';
+    });
+  }
+
+  if (Array.isArray(draft.gallery?.items)) {
+    draft.gallery.items.forEach((item: any) => {
+      if (isStockPhoto(item.image)) item.image = '';
+    });
+  }
+
+  draft.schemaVersion = 2;
+  return draft as SiteConfig;
+}
+
 export const useSiteStore = create<SiteStoreState>((set, get) => ({
   config: defaultSiteConfig,
   pastHistory: [],
@@ -185,10 +229,14 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        set({ config: parsed });
+        const migrated = migrateLegacyConfig(parsed);
+        set({ config: migrated });
+      } else {
+        set({ config: defaultSiteConfig });
       }
     } catch (e) {
       console.warn('Could not parse site config from localStorage:', e);
+      set({ config: defaultSiteConfig });
     }
   },
 

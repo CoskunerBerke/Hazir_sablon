@@ -2,11 +2,11 @@ import { SiteConfig } from '@/types/site-config';
 
 /**
  * NEUTRAL STARTER DEFAULT CONFIG
- * Removes any pre-baked single-client brand names (e.g. Aura Studio).
- * Serves as a neutral starting point for new sites.
+ * All built-in stock photos and fake business contact details are cleared.
+ * Displays clean upload placeholders for un-configured image fields.
  */
 export const defaultSiteConfig: SiteConfig = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   isWizardCompleted: false,
 
   business: {
@@ -18,8 +18,8 @@ export const defaultSiteConfig: SiteConfig = {
   },
 
   brand: {
-    logo: '/assets/client/logo.svg',
-    favicon: '/assets/client/favicon.ico',
+    logo: '',
+    favicon: '',
     logoAlt: 'İşletme Logosu',
     monogramText: 'İA',
   },
@@ -77,13 +77,13 @@ export const defaultSiteConfig: SiteConfig = {
     badge: '✨ Hoş Geldiniz',
     title: 'Müşterilerinize İlham Veren Profesyonel Çözümler',
     description: 'Hizmetlerinizi, uzmanlığınızı ve markanızın ayrıcalıklarını tek bir güçlü ve modern sayfada sunun.',
-    image: '/assets/client/hero.jpg',
+    image: '',
     imageFocalPoint: { x: 50, y: 50 },
     overlayOpacity: 10,
     minHeight: 'min-h-[600px]',
     primaryCta: {
       text: 'Bize Ulaşın',
-      href: 'https://wa.me/905000000000',
+      href: '#contact',
       type: 'whatsapp',
     },
     secondaryCta: {
@@ -120,7 +120,7 @@ export const defaultSiteConfig: SiteConfig = {
       'İşletmemiz, müşteri memnuniyetini en üst düzeyde tutma hedefiyle kurulmuştur. Modern teknolojiyi ve sektör standardı kalite prensiplerini her adımda uyguluyoruz.',
       'Sizlere en konforlu ve güvenilir deneyimi sunmak için sürekli gelişiyor, kendimizi yeniliyoruz.',
     ],
-    image: '/assets/client/about.jpg',
+    image: '',
     imageFocalPoint: { x: 50, y: 50 },
     highlights: [
       'Kalite Garantisi ve Standartlara Tam Uyumluluk',
@@ -141,7 +141,7 @@ export const defaultSiteConfig: SiteConfig = {
         price: '₺500',
         duration: '45 Dk',
         category: 'Temel Paket',
-        image: '/assets/client/service-01.jpg',
+        image: '',
         iconName: 'Sparkles',
         buttonText: 'Detaylı Bilgi Al',
       },
@@ -152,7 +152,7 @@ export const defaultSiteConfig: SiteConfig = {
         price: '₺850',
         duration: '60 Dk',
         category: 'Popüler',
-        image: '/assets/client/service-02.jpg',
+        image: '',
         iconName: 'Zap',
         buttonText: 'Detaylı Bilgi Al',
       },
@@ -163,7 +163,7 @@ export const defaultSiteConfig: SiteConfig = {
         price: '₺1.200',
         duration: '90 Dk',
         category: 'Premium',
-        image: '/assets/client/service-03.jpg',
+        image: '',
         iconName: 'Crown',
         buttonText: 'Detaylı Bilgi Al',
       },
@@ -179,7 +179,7 @@ export const defaultSiteConfig: SiteConfig = {
       {
         step: '01',
         title: 'İlk Görüşme & İhtiyaç Analizi',
-        description: 'Taleplerinizi dinliyor, işletmeniz veya cildiniz için en uygun planı çıkarıyoruz.',
+        description: 'Taleplerinizi dinliyor, işletmeniz veya ihtiyacınız için en uygun planı çıkarıyoruz.',
         iconName: 'MessageSquare',
       },
       {
@@ -211,31 +211,31 @@ export const defaultSiteConfig: SiteConfig = {
     items: [
       {
         id: 'gal-1',
-        title: 'Mekan ve Karşılama Alanımız',
+        title: 'Fotoğraf Başlığı 1',
         category: 'Ortam',
-        image: '/assets/client/gallery-01.jpg',
-        alt: 'İşletme ferah karşılama salonu',
+        image: '',
+        alt: 'Galeri Görseli',
       },
       {
         id: 'gal-2',
-        title: 'Özel Hizmet Alanımız',
+        title: 'Fotoğraf Başlığı 2',
         category: 'Hizmet',
-        image: '/assets/client/gallery-02.jpg',
-        alt: 'Profesyonel uygulama odası',
+        image: '',
+        alt: 'Galeri Görseli',
       },
       {
         id: 'gal-3',
-        title: 'Kullandığımız Kaliteli Ekipmanlar',
+        title: 'Fotoğraf Başlığı 3',
         category: 'Ekipman',
-        image: '/assets/client/gallery-03.jpg',
-        alt: 'Sertifikalı ve kaliteli ekipmanlar',
+        image: '',
+        alt: 'Galeri Görseli',
       },
       {
         id: 'gal-4',
-        title: 'Tamamlanan Uygulama Kareleri',
+        title: 'Fotoğraf Başlığı 4',
         category: 'Sonuçlar',
-        image: '/assets/client/gallery-04.jpg',
-        alt: 'Hizmet sonu detay görseli',
+        image: '',
+        alt: 'Galeri Görseli',
       },
     ],
   },
@@ -246,52 +246,36 @@ export const defaultSiteConfig: SiteConfig = {
     items: [
       {
         id: 'rev-1',
-        name: 'Ahmet Y.',
+        name: 'Örnek Müşteri Yorumu 1',
         role: 'Müşteri',
-        comment: 'Çalışanların ilgisi ve ortamın temizliği çok iyiydi. Kesinlikle tekrar geleceğim.',
+        comment: 'Hizmet kalitesi ve güler yüzlü yaklaşım çok başarılıydı.',
         rating: 5,
-        date: 'Geçen hafta',
-        source: 'Google',
-      },
-      {
-        id: 'rev-2',
-        name: 'Elif K.',
-        role: 'Müşteri',
-        comment: 'Hizmet kalitesi ve güler yüz harikaydı. Zamanında randevu takibi yapılıyor.',
-        rating: 5,
-        date: '2 hafta önce',
+        date: 'Yakın zamanda',
         source: 'Google',
       },
     ],
   },
 
   contact: {
-    phone: '+90 500 000 00 00',
-    phoneFormatted: '0500 000 00 00',
-    whatsapp: '905000000000',
-    whatsappDefaultMessage: 'Merhaba, web siteniz üzerinden bilgi ve randevu almak istiyorum.',
-    email: 'info@isletmeniz.com',
-    address: 'Atatürk Caddesi No: 123, Merkez / Şehir',
-    mapsUrl: 'https://maps.google.com',
+    phone: '',
+    phoneFormatted: '',
+    whatsapp: '',
+    whatsappDefaultMessage: 'Merhaba, web siteniz üzerinden bilgi almak istiyorum.',
+    email: '',
+    address: '',
+    mapsUrl: '',
     mapsEmbedUrl: '',
-    businessHours: [
-      { days: 'Pazartesi - Cuma', hours: '09:00 - 19:00', isOpen: true },
-      { days: 'Cumartesi', hours: '10:00 - 17:00', isOpen: true },
-      { days: 'Pazar', hours: 'Kapalı', isOpen: false },
-    ],
+    businessHours: [],
   },
 
-  socialLinks: {
-    instagram: 'https://instagram.com',
-    facebook: 'https://facebook.com',
-  },
+  socialLinks: {},
 
   seo: {
     title: 'İşletme Adınız | Sektörel Profesyonel Hizmetler',
     description: 'Şehrinizin en güvenilir profesyonel işletmesinde kaliteli hizmetler ve randevu imkanı.',
     keywords: ['hizmetler', 'işletme', 'randevu'],
-    ogImage: '/assets/client/og-image.jpg',
-    domain: 'https://isletmeniz.com',
+    ogImage: '',
+    domain: '',
   },
 
   features: {

@@ -109,7 +109,7 @@ export const SECTOR_PRESETS: SectorPreset[] = [
     presetStyle: 'corporate',
     specialSectionType: 'steps',
     heroTitle: 'Gülüşünüz ve Sağlığınız İçin Uzman Dokunuşlar',
-    heroDescription: 'Steril clinic ortamımız, son teknoloji teşhis imkanlarımız ve tecrübeli hekim kadromuzla yanınızdayız.',
+    heroDescription: 'Steril klinik ortamımız, son teknoloji teşhis imkanlarımız ve tecrübeli hekim kadromuzla yanınızdayız.',
     services: [
       {
         title: 'Ağız ve Diş Muayenesi',
@@ -252,6 +252,11 @@ export function applySectorPreset(config: SiteConfig, sectorId: string): SiteCon
       ...config.hero,
       title: preset.heroTitle,
       description: preset.heroDescription,
+      image: '',
+    },
+    about: {
+      ...config.about,
+      image: '',
     },
     services: {
       ...config.services,
@@ -261,6 +266,7 @@ export function applySectorPreset(config: SiteConfig, sectorId: string): SiteCon
         description: s.description,
         price: s.price,
         category: s.category,
+        image: '',
         iconName: 'Sparkles',
       })),
     },

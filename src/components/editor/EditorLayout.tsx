@@ -83,16 +83,18 @@ export const EditorLayout: React.FC = () => {
             <button
               onClick={undo}
               disabled={!canUndo()}
-              className="p-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+              className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
               title="Geri Al (Ctrl+Z)"
+              aria-label="Geri Al"
             >
               <Undo2 className="w-4 h-4" />
             </button>
             <button
               onClick={redo}
               disabled={!canRedo()}
-              className="p-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+              className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:hover:bg-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary"
               title="İleri Al (Ctrl+Y)"
+              aria-label="İleri Al"
             >
               <Redo2 className="w-4 h-4" />
             </button>
@@ -113,45 +115,49 @@ export const EditorLayout: React.FC = () => {
         <div className="flex items-center gap-1 bg-slate-100 dark:bg-zinc-800/60 p-1 rounded-xl border border-slate-200/60 dark:border-zinc-800">
           <button
             onClick={() => setViewportMode('desktop')}
-            className={`p-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`p-1.5 rounded-lg text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary ${
               viewportMode === 'desktop'
                 ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
                 : 'text-muted hover:text-foreground'
             }`}
             title="Masaüstü Görünümü"
+            aria-label="Masaüstü Görünümü"
           >
             <Monitor className="w-4 h-4" />
           </button>
           <button
             onClick={() => setViewportMode('tablet')}
-            className={`p-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`p-1.5 rounded-lg text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary ${
               viewportMode === 'tablet'
                 ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
                 : 'text-muted hover:text-foreground'
             }`}
             title="Tablet Görünümü"
+            aria-label="Tablet Görünümü"
           >
             <Tablet className="w-4 h-4" />
           </button>
           <button
             onClick={() => setViewportMode('mobile')}
-            className={`p-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`p-1.5 rounded-lg text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary ${
               viewportMode === 'mobile'
                 ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
                 : 'text-muted hover:text-foreground'
             }`}
             title="Mobil Görünümü"
+            aria-label="Mobil Görünümü"
           >
             <Smartphone className="w-4 h-4" />
           </button>
           <button
             onClick={() => setViewportMode(viewportMode === 'fullscreen' ? 'desktop' : 'fullscreen')}
-            className={`p-1.5 rounded-lg text-xs font-bold transition-all ${
+            className={`p-1.5 rounded-lg text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary ${
               viewportMode === 'fullscreen'
                 ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs'
                 : 'text-muted hover:text-foreground'
             }`}
             title="Tam Ekran Önizle"
+            aria-label="Tam Ekran Önizle"
           >
             <Maximize2 className="w-4 h-4" />
           </button>
@@ -163,7 +169,7 @@ export const EditorLayout: React.FC = () => {
             href="/site"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-primary text-white shadow-sm hover:bg-brand-primary-hover transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-brand-primary text-white shadow-sm hover:bg-brand-primary-hover transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary"
           >
             <span>Yayın Görünümü</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -175,26 +181,34 @@ export const EditorLayout: React.FC = () => {
       <div className="flex-1 flex overflow-hidden relative">
         {/* Left Side Editing Sidebar Panel */}
         {viewportMode !== 'fullscreen' && (
-          <aside className="w-full md:w-[380px] lg:w-[420px] bg-white dark:bg-zinc-900 border-r border-slate-200 dark:border-zinc-800 flex flex-col z-20 shrink-0 shadow-lg">
-            {/* Panel Tabs Navigation */}
-            <div className="flex items-center overflow-x-auto p-2 border-b border-slate-100 dark:border-zinc-800 gap-1 no-scrollbar bg-slate-50/50 dark:bg-zinc-950/50">
-              {tabs.map((tab) => {
-                const isActive = activePanelTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActivePanelTab(tab.id)}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold shrink-0 transition-all ${
-                      isActive
-                        ? 'bg-white dark:bg-zinc-800 text-brand-primary shadow-xs border border-slate-200/80 dark:border-zinc-700'
-                        : 'text-muted hover:text-foreground hover:bg-slate-100 dark:hover:bg-zinc-800/40'
-                    }`}
-                  >
-                    {tab.icon}
-                    <span>{tab.label}</span>
-                  </button>
-                );
-              })}
+          <aside className="w-full md:w-[440px] lg:w-[460px] bg-white dark:bg-zinc-900 border-r border-slate-200 dark:border-zinc-800 flex flex-col z-20 shrink-0 shadow-lg">
+            {/* Panel Tabs 2-Column Grid Navigation */}
+            <div className="p-3 border-b border-slate-200 dark:border-zinc-800 bg-slate-50/70 dark:bg-zinc-950/70 shrink-0">
+              <div role="tablist" aria-label="Editör Düzenleme Panelleri" className="grid grid-cols-2 gap-2">
+                {tabs.map((tab) => {
+                  const isActive = activePanelTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      id={`tab-${tab.id}`}
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-controls={`panel-${tab.id}`}
+                      onClick={() => setActivePanelTab(tab.id)}
+                      className={`w-full min-h-[48px] px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-brand-primary active:scale-[0.98] ${
+                        isActive
+                          ? 'bg-white dark:bg-zinc-800 text-brand-primary shadow-sm border border-brand-primary/30 dark:border-brand-primary/40 ring-1 ring-brand-primary/20'
+                          : 'bg-white/70 dark:bg-zinc-900/70 text-slate-700 dark:text-zinc-300 border border-slate-200/80 dark:border-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800/80 hover:text-foreground'
+                      }`}
+                    >
+                      <div className={`p-1.5 rounded-lg shrink-0 transition-colors ${isActive ? 'bg-brand-light text-brand-primary' : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400'}`}>
+                        {tab.icon}
+                      </div>
+                      <span className="truncate text-left font-bold">{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Active Panel Content Area */}

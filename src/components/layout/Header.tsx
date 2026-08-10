@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X, Phone, MessageSquare, ArrowRight } from 'lucide-react';
-import { BusinessConfig } from '@/types/business';
 import { SafeImage } from '../ui/SafeImage';
+import { formatPhoneLink, formatWhatsAppLink } from '@/lib/validation/phone';
 
 interface HeaderProps {
-  config: BusinessConfig;
+  config: any;
 }
 
 export const Header: React.FC<HeaderProps> = ({ config }) => {
@@ -21,8 +21,8 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
 
       // Section scroll spy
       const navItems = config.navigation || [];
-      const sections = navItems.map((nav) => nav.href.replace('#', ''));
-      const current = sections.find((section) => {
+      const sections = navItems.map((nav: any) => nav.href.replace('#', ''));
+      const current = sections.find((section: string) => {
         const el = document.getElementById(section);
         if (el) {
           const rect = el.getBoundingClientRect();
@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [config.navigation]);
 
-  const shortNameText = config.shortName || (config as any).business?.shortName || (config as any).businessName || 'İA';
+  const shortNameText = config.shortName || config.business?.shortName || config.businessName || 'İA';
   const monogram = shortNameText
     .split(' ')
     .filter(Boolean)
@@ -47,7 +47,13 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
     .slice(0, 2) || 'İA';
 
   const primaryCta = config.hero?.primaryCta || { text: 'İletişim', href: '#contact' };
-  const logoSrc = config.logo || (config as any).brand?.logo;
+  const logoSrc = config.logo || config.brand?.logo;
+
+  const phoneLink = formatPhoneLink(config.contact?.phone);
+  const waLink = formatWhatsAppLink(config.contact?.whatsapp, config.contact?.whatsappDefaultMessage);
+
+  const finalCtaHref = primaryCta.type === 'whatsapp' ? (waLink || '#contact') : (primaryCta.href || '#contact');
+  const isWaType = primaryCta.type === 'whatsapp' && !!waLink;
 
   return (
     <header
@@ -86,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1 bg-slate-100/60 dark:bg-zinc-900/60 backdrop-blur-md p-1.5 rounded-full border border-slate-200/60 dark:border-zinc-800/60">
-            {(config.navigation || []).map((item) => {
+            {(config.navigation || []).map((item: any) => {
               const sectionId = item.href.replace('#', '');
               const isActive = activeSection === sectionId;
 
@@ -108,23 +114,23 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
 
           {/* Right Action CTA */}
           <div className="hidden lg:flex items-center gap-3">
-            {config.contact?.phone && (
+            {phoneLink && (
               <a
-                href={`tel:${config.contact.phone}`}
+                href={phoneLink}
                 className="hidden xl:flex items-center gap-2 text-xs font-semibold text-muted hover:text-foreground transition-colors px-3 py-2"
               >
                 <Phone className="w-4 h-4 text-brand-primary" />
-                <span>{config.contact.phoneFormatted || config.contact.phone}</span>
+                <span>{config.contact?.phoneFormatted || config.contact?.phone}</span>
               </a>
             )}
 
             <a
-              href={primaryCta.href}
-              target={primaryCta.type === 'whatsapp' ? '_blank' : undefined}
-              rel={primaryCta.type === 'whatsapp' ? 'noopener noreferrer' : undefined}
+              href={finalCtaHref}
+              target={isWaType ? '_blank' : undefined}
+              rel={isWaType ? 'noopener noreferrer' : undefined}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-brand-primary hover:bg-brand-primary-hover text-white shadow-md shadow-brand-primary/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              {primaryCta.type === 'whatsapp' && <MessageSquare className="w-4 h-4" />}
+              {isWaType && <MessageSquare className="w-4 h-4" />}
               <span>{primaryCta.text}</span>
             </a>
           </div>
@@ -144,7 +150,7 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-x-0 top-[65px] z-50 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xl border-b border-slate-200 dark:border-zinc-800 p-6 shadow-2xl space-y-6 animate-fadeIn">
           <nav className="flex flex-col space-y-3">
-            {(config.navigation || []).map((item) => (
+            {(config.navigation || []).map((item: any) => (
               <a
                 key={item.href}
                 href={item.href}
@@ -159,23 +165,23 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
 
           <div className="pt-4 border-t border-slate-200 dark:border-zinc-800 space-y-3">
             <a
-              href={primaryCta.href}
+              href={finalCtaHref}
               onClick={() => setMobileMenuOpen(false)}
-              target={primaryCta.type === 'whatsapp' ? '_blank' : undefined}
-              rel={primaryCta.type === 'whatsapp' ? 'noopener noreferrer' : undefined}
+              target={isWaType ? '_blank' : undefined}
+              rel={isWaType ? 'noopener noreferrer' : undefined}
               className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-bold bg-brand-primary text-white shadow-lg shadow-brand-primary/25"
             >
-              {primaryCta.type === 'whatsapp' && <MessageSquare className="w-5 h-5" />}
+              {isWaType && <MessageSquare className="w-5 h-5" />}
               <span>{primaryCta.text}</span>
             </a>
 
-            {config.contact?.phone && (
+            {phoneLink && (
               <a
-                href={`tel:${config.contact.phone}`}
+                href={phoneLink}
                 className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold border border-slate-200 dark:border-zinc-800 text-foreground hover:bg-slate-50 dark:hover:bg-zinc-900"
               >
                 <Phone className="w-4 h-4 text-brand-primary" />
-                <span>Bizi Arayın: {config.contact.phoneFormatted || config.contact.phone}</span>
+                <span>Bizi Arayın: {config.contact?.phoneFormatted || config.contact?.phone}</span>
               </a>
             )}
           </div>

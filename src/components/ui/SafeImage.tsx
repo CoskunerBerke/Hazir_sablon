@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image, { ImageProps } from 'next/image';
-import { ImageOff } from 'lucide-react';
+import { Upload } from 'lucide-react';
 
 interface SafeImageProps extends Omit<ImageProps, 'src' | 'alt'> {
   src?: string | null;
@@ -31,22 +31,22 @@ export const SafeImage: React.FC<SafeImageProps> = ({
   if (isInvalidSrc) {
     return (
       <div
-        className={`relative overflow-hidden flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-zinc-800 dark:to-zinc-900 border border-slate-200/60 dark:border-zinc-800 text-slate-400 dark:text-zinc-500 rounded-xl transition-all ${className}`}
+        className={`relative overflow-hidden flex flex-col items-center justify-center p-4 bg-slate-50/80 dark:bg-zinc-800/40 border-2 border-dashed border-slate-300 dark:border-zinc-700 text-slate-500 dark:text-zinc-400 rounded-2xl transition-all ${className}`}
         style={aspectRatio ? { aspectRatio } : undefined}
       >
-        <div className="flex flex-col items-center justify-center p-4 text-center z-10">
-          <ImageOff className="w-8 h-8 opacity-40 mb-2" />
-          <span className="text-xs font-medium opacity-60 max-w-[80%] truncate">
-            {placeholderLabel || alt || 'Görsel Alanı'}
+        <div className="flex flex-col items-center justify-center text-center z-10 space-y-1.5 pointer-events-none">
+          <div className="w-9 h-9 rounded-xl bg-slate-200/80 dark:bg-zinc-700/60 flex items-center justify-center text-slate-500 dark:text-zinc-300">
+            <Upload className="w-4 h-4 opacity-70" />
+          </div>
+          <span className="text-xs font-bold text-slate-700 dark:text-zinc-200">
+            Fotoğrafınızı yükleyin
           </span>
-          {showDevBadge && (
-            <span className="mt-2 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-              TODO: client/{placeholderLabel || 'image'}
+          {placeholderLabel && (
+            <span className="text-[10px] text-muted max-w-[85%] truncate">
+              ({placeholderLabel})
             </span>
           )}
         </div>
-        {/* Subtle decorative background pattern */}
-        <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
       </div>
     );
   }
@@ -63,11 +63,6 @@ export const SafeImage: React.FC<SafeImageProps> = ({
         onError={() => setError(true)}
         {...props}
       />
-      {showDevBadge && (
-        <span className="absolute top-2 left-2 z-20 pointer-events-none inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 text-white backdrop-blur-xs border border-white/20">
-          {placeholderLabel || 'client-image'}
-        </span>
-      )}
     </div>
   );
 };

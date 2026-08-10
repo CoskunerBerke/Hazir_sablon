@@ -1,6 +1,7 @@
 import React from 'react';
 import { SectionHeader } from '../ui/SectionHeader';
 import { Phone, MessageSquare, Mail, MapPin, Clock, ExternalLink } from 'lucide-react';
+import { formatPhoneLink, formatWhatsAppLink } from '@/lib/validation/phone';
 
 interface ContactSectionProps {
   config: any;
@@ -11,10 +12,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
   const businessHours = contact.businessHours || config?.businessHours || [];
   const features = config?.features || {};
 
-  const whatsappMessage = encodeURIComponent(
+  const whatsappUrl = formatWhatsAppLink(
+    contact.whatsapp,
     contact.whatsappDefaultMessage || 'Merhaba, web siteniz üzerinden randevu ve bilgi almak istiyorum.'
   );
-  const whatsappUrl = `https://wa.me/${contact.whatsapp || ''}?text=${whatsappMessage}`;
+  const phoneUrl = formatPhoneLink(contact.phone);
 
   return (
     <section id="contact" className="py-20 md:py-28 bg-white dark:bg-zinc-900">
@@ -33,7 +35,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
             {/* Quick Action Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* WhatsApp Card */}
-              {contact.whatsapp && (
+              {whatsappUrl && (
                 <a
                   href={whatsappUrl}
                   target="_blank"
@@ -54,9 +56,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
               )}
 
               {/* Phone Call Card */}
-              {contact.phone && (
+              {phoneUrl && (
                 <a
-                  href={`tel:${contact.phone}`}
+                  href={phoneUrl}
                   className="p-6 rounded-3xl bg-brand-light/50 border border-brand-primary/20 hover:border-brand-primary/40 transition-colors space-y-3 group"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-brand-primary text-white flex items-center justify-center shadow-md shadow-brand-primary/30 group-hover:scale-105 transition-transform">
@@ -114,22 +116,24 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ config }) => {
             </div>
 
             {/* Business Hours Breakdown */}
-            <div className="p-8 rounded-3xl bg-slate-50/70 dark:bg-zinc-800/50 border border-slate-200/80 dark:border-zinc-700/60 space-y-4">
-              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <Clock className="w-4 h-4 text-brand-primary" />
-                Çalışma Saatleri
-              </h4>
-              <div className="space-y-2 text-xs">
-                {businessHours.map((hrs: any, index: number) => (
-                  <div key={index} className="flex justify-between items-center py-1.5 border-b border-slate-200/50 dark:border-zinc-700/40">
-                    <span className="font-medium text-foreground">{hrs.days}</span>
-                    <span className={`font-semibold ${hrs.isOpen ? 'text-brand-primary' : 'text-rose-500'}`}>
-                      {hrs.hours}
-                    </span>
-                  </div>
-                ))}
+            {businessHours.length > 0 && (
+              <div className="p-8 rounded-3xl bg-slate-50/70 dark:bg-zinc-800/50 border border-slate-200/80 dark:border-zinc-700/60 space-y-4">
+                <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-brand-primary" />
+                  Çalışma Saatleri
+                </h4>
+                <div className="space-y-2 text-xs">
+                  {businessHours.map((hrs: any, index: number) => (
+                    <div key={index} className="flex justify-between items-center py-1.5 border-b border-slate-200/50 dark:border-zinc-700/40">
+                      <span className="font-medium text-foreground">{hrs.days}</span>
+                      <span className={`font-semibold ${hrs.isOpen ? 'text-brand-primary' : 'text-rose-500'}`}>
+                        {hrs.hours}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
           </div>
 

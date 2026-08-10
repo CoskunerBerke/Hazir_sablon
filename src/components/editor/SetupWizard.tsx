@@ -6,7 +6,12 @@ import { SECTOR_PRESETS } from '@/config/sector-presets';
 import { STYLE_PRESETS } from '@/config/style-presets';
 import { DynamicIcon } from '../ui/DynamicIcon';
 import { compressImageFile, saveImageToDB } from '@/lib/storage/indexed-db';
-import { Sparkles, ArrowRight, ArrowLeft, Check, Upload } from 'lucide-react';
+import {
+  cleanPhoneNumber,
+  validatePhoneNumber,
+  validateWhatsAppNumber,
+} from '@/lib/validation/phone';
+import { Sparkles, ArrowRight, ArrowLeft, Check, Upload, AlertCircle } from 'lucide-react';
 
 export const SetupWizard: React.FC = () => {
   const { config, updateConfig, applySector, applyStylePreset } = useSiteStore();
@@ -20,6 +25,18 @@ export const SetupWizard: React.FC = () => {
   const [selectedPreset, setSelectedPreset] = useState(config.theme.preset || 'minimal');
   const [phone, setPhone] = useState(config.contact.phone || '');
   const [whatsapp, setWhatsapp] = useState(config.contact.whatsapp || '');
+
+  const phoneValidation = validatePhoneNumber(phone);
+  const whatsappValidation = validateWhatsAppNumber(whatsapp);
+  const isStep6Valid = phoneValidation.isValid && whatsappValidation.isValid;
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhone(cleanPhoneNumber(e.target.value));
+  };
+
+  const handleWhatsAppChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setWhatsapp(cleanPhoneNumber(e.target.value));
+  };
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -35,6 +52,8 @@ export const SetupWizard: React.FC = () => {
   };
 
   const handleFinish = () => {
+    if (!isStep6Valid) return;
+
     applySector(selectedSector);
     applyStylePreset(selectedPreset as any);
 
@@ -44,8 +63,9 @@ export const SetupWizard: React.FC = () => {
       if (shortName.trim()) draft.business.shortName = shortName;
       if (logoUrl) draft.brand.logo = logoUrl;
       draft.theme.colors.primary = primaryColor;
-      if (phone.trim()) draft.contact.phone = phone;
-      if (whatsapp.trim()) draft.contact.whatsapp = whatsapp;
+      draft.contact.phone = phone;
+      draft.contact.phoneFormatted = phone;
+      draft.contact.whatsapp = whatsapp;
     });
   };
 
@@ -259,34 +279,66 @@ export const SetupWizard: React.FC = () => {
             <div className="space-y-4 animate-fadeIn">
               <div className="space-y-1">
                 <h4 className="text-2xl font-extrabold text-foreground">Müşterileriniz Size Nasıl Ulaşsın?</h4>
-                <p className="text-sm text-muted">Telefon ve WhatsApp bilgilerinizi girerek doğrudan arama alabilirsiniz.</p>
+                <p className="text-sm text-muted">Telefon ve WhatsApp bilgilerinizi girerek doğrudan arama ve mesaj alabilirsiniz (İsteğe bağlı).</p>
               </div>
 
               <div className="space-y-4 pt-2">
+                {/* Phone input */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-2">
-                    Telefon Numarası
+                  <label htmlFor="wizard-phone" className="block text-xs font-bold uppercase tracking-wider text-muted mb-2">
+                    Telefon Numarası (Sadece rakam & +)
                   </label>
                   <input
-                    type="text"
+                    id="wizard-phone"
+                    type="tel"
+                    inputMode="tel"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Örn: 0212 555 00 11"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/50 text-foreground font-semibold focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                    onChange={handlePhoneChange}
+                    aria-invalid={!phoneValidation.isValid}
+                    aria-describedby={!phoneValidation.isValid ? 'w-phone-err' : undefined}
+                    placeholder="Örn: +902125550011"
+                    maxLength={16}
+                    className={`w-full px-4 py-3 rounded-xl border bg-slate-50 dark:bg-zinc-800/50 text-foreground font-semibold focus:outline-none focus:ring-2 ${
+                      !phoneValidation.isValid
+                        ? 'border-rose-500 ring-1 ring-rose-500/30'
+                        : 'border-slate-200 dark:border-zinc-800 focus:ring-brand-primary'
+                    }`}
                   />
+                  {!phoneValidation.isValid && phoneValidation.error && (
+                    <p id="w-phone-err" className="text-xs font-semibold text-rose-500 mt-1.5 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{phoneValidation.error}</span>
+                    </p>
+                  )}
                 </div>
 
+                {/* WhatsApp input */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-2">
-                    WhatsApp Numarası (Ülke Koduyla)
+                  <label htmlFor="wizard-whatsapp" className="block text-xs font-bold uppercase tracking-wider text-muted mb-2">
+                    WhatsApp Numarası (Ülke Koduyla, 0 ile başlayamaz)
                   </label>
                   <input
-                    type="text"
+                    id="wizard-whatsapp"
+                    type="tel"
+                    inputMode="tel"
                     value={whatsapp}
-                    onChange={(e) => setWhatsapp(e.target.value)}
+                    onChange={handleWhatsAppChange}
+                    aria-invalid={!whatsappValidation.isValid}
+                    aria-describedby={!whatsappValidation.isValid ? 'w-wa-err' : undefined}
                     placeholder="Örn: 905551234567"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/50 text-foreground font-semibold focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                    maxLength={16}
+                    className={`w-full px-4 py-3 rounded-xl border bg-slate-50 dark:bg-zinc-800/50 text-foreground font-semibold focus:outline-none focus:ring-2 ${
+                      !whatsappValidation.isValid
+                        ? 'border-rose-500 ring-1 ring-rose-500/30'
+                        : 'border-slate-200 dark:border-zinc-800 focus:ring-brand-primary'
+                    }`}
                   />
+                  {!whatsappValidation.isValid && whatsappValidation.error && (
+                    <p id="w-wa-err" className="text-xs font-semibold text-rose-500 mt-1.5 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{whatsappValidation.error}</span>
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -318,7 +370,8 @@ export const SetupWizard: React.FC = () => {
           ) : (
             <button
               onClick={handleFinish}
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-extrabold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xl shadow-emerald-600/30 transition-all hover:scale-105"
+              disabled={!isStep6Valid}
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-extrabold bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 disabled:hover:bg-emerald-600 disabled:cursor-not-allowed text-white shadow-xl shadow-emerald-600/30 transition-all hover:scale-105"
             >
               <Sparkles className="w-4 h-4" />
               <span>Sitemi Oluştur</span>
