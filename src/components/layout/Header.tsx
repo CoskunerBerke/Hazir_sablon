@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
   const monogram = shortNameText
     .split(' ')
     .filter(Boolean)
-    .map((w) => w[0])
+    .map((w: string) => w[0])
     .join('')
     .toUpperCase()
     .slice(0, 2) || 'İA';
