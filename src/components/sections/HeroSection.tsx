@@ -1,19 +1,24 @@
 import React from 'react';
-import { BusinessConfig } from '@/types/business';
 import { SafeImage } from '../ui/SafeImage';
 import { MessageSquare, ArrowRight, ShieldCheck, Star } from 'lucide-react';
 
 interface HeroSectionProps {
-  config: BusinessConfig;
+  config: any;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ config }) => {
-  const { hero, contact, features } = config;
-  const whatsappUrl = `https://wa.me/${contact.whatsapp}?text=${encodeURIComponent(
+  const hero = config?.hero || {};
+  const contact = config?.contact || {};
+  const features = config?.features || {};
+
+  const primaryCta = hero.primaryCta || { text: 'Bize Ulaşın', href: '#contact', type: 'whatsapp' };
+  const secondaryCta = hero.secondaryCta;
+
+  const whatsappUrl = `https://wa.me/${contact.whatsapp || ''}?text=${encodeURIComponent(
     contact.whatsappDefaultMessage || 'Merhaba, randevu ve bilgi almak istiyorum.'
   )}`;
 
-  const primaryHref = hero.primaryCta.type === 'whatsapp' ? whatsappUrl : hero.primaryCta.href;
+  const primaryHref = primaryCta.type === 'whatsapp' ? whatsappUrl : primaryCta.href || '#contact';
 
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-50/50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
@@ -33,31 +38,31 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ config }) => {
             )}
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground leading-[1.15] tracking-tight">
-              {hero.title}
+              {hero.title || config?.business?.tagline || 'İşletmenizi Tanıtın'}
             </h1>
 
             <p className="text-lg md:text-xl text-muted leading-relaxed max-w-2xl mx-auto lg:mx-0 font-normal">
-              {hero.description}
+              {hero.description || config?.business?.description || ''}
             </p>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <a
                 href={primaryHref}
-                target={hero.primaryCta.type === 'whatsapp' ? '_blank' : undefined}
-                rel={hero.primaryCta.type === 'whatsapp' ? 'noopener noreferrer' : undefined}
+                target={primaryCta.type === 'whatsapp' ? '_blank' : undefined}
+                rel={primaryCta.type === 'whatsapp' ? 'noopener noreferrer' : undefined}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full text-base font-bold bg-brand-primary hover:bg-brand-primary-hover text-white shadow-xl shadow-brand-primary/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                {hero.primaryCta.type === 'whatsapp' && <MessageSquare className="w-5 h-5 fill-current" />}
-                <span>{hero.primaryCta.text}</span>
+                {primaryCta.type === 'whatsapp' && <MessageSquare className="w-5 h-5 fill-current" />}
+                <span>{primaryCta.text}</span>
               </a>
 
-              {hero.secondaryCta && (
+              {secondaryCta && secondaryCta.text && (
                 <a
-                  href={hero.secondaryCta.href}
+                  href={secondaryCta.href || '#services'}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full text-base font-semibold border border-slate-300 dark:border-zinc-700 text-foreground hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors"
                 >
-                  <span>{hero.secondaryCta.text}</span>
+                  <span>{secondaryCta.text}</span>
                   <ArrowRight className="w-4 h-4" />
                 </a>
               )}
@@ -85,7 +90,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ config }) => {
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 aspect-[4/5] sm:aspect-[4/3] lg:aspect-[4/5]">
                 <SafeImage
                   src={hero.image}
-                  alt={hero.title}
+                  alt={hero.title || 'Hero Görseli'}
                   fill
                   priority
                   className="object-cover"
@@ -99,8 +104,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ config }) => {
                     <Star className="w-6 h-6 fill-current" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-foreground">{config.shortName}</h4>
-                    <p className="text-xs text-muted">{config.industry}</p>
+                    <h4 className="text-sm font-bold text-foreground">
+                      {config?.shortName || config?.business?.shortName || config?.business?.name || 'İşletmeniz'}
+                    </h4>
+                    <p className="text-xs text-muted">
+                      {config?.industry || config?.business?.industry || 'Genel Hizmetler'}
+                    </p>
                   </div>
                 </div>
               </div>
