@@ -154,20 +154,17 @@ header a:active {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Animations */
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+/* Left-to-Right Slow River Marquee Animation (Never stops on hover) */
+@keyframes marquee-left-to-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
 }
 
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 35s linear infinite;
-}
-
-.animate-marquee:hover {
-  animation-play-state: paused;
+  animation: marquee-left-to-right 50s linear infinite;
+  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {

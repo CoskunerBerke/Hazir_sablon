@@ -11,8 +11,13 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ config }) => {
 
   if (!reviewItems || reviewItems.length === 0) return null;
 
-  // Duplicate list to create a seamless, infinite river marquee loop
-  const marqueeItems = [...reviewItems, ...reviewItems, ...reviewItems];
+  // Quadruple items to guarantee a 100% seamless, gapless river marquee flow
+  const marqueeItems = [
+    ...reviewItems,
+    ...reviewItems,
+    ...reviewItems,
+    ...reviewItems,
+  ];
 
   return (
     <section id="reviews" className="py-20 md:py-28 bg-slate-50/70 dark:bg-zinc-950/70 border-t border-slate-200/60 dark:border-zinc-800/60 overflow-hidden">
@@ -24,7 +29,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ config }) => {
         />
       </div>
 
-      {/* Infinite River Marquee Stream Container (Left-to-Right Continuous Flow) */}
+      {/* Slow Left-to-Right Continuous River Marquee Stream (Never stops on mouse hover) */}
       <div className="relative w-full overflow-hidden py-4">
         {/* Left & Right Soft Blur Faders */}
         <div className="absolute top-0 bottom-0 left-0 w-16 md:w-32 bg-gradient-to-r from-slate-50 dark:from-zinc-950 to-transparent z-10 pointer-events-none" />
