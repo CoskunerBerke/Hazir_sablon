@@ -107,13 +107,12 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
   setSelectedSection: (sectionId) => set({ selectedSection: sectionId }),
 
   selectSectionAndTab: (sectionId: string) => {
-    // Contextual section selection: maps section clicked in live preview to left editor panel tab
     let targetTab: PanelTab = 'content';
     if (sectionId === 'gallery') {
       targetTab = 'media';
     } else if (sectionId === 'contact') {
       targetTab = 'contact';
-    } else if (sectionId === 'services') {
+    } else {
       targetTab = 'content';
     }
 

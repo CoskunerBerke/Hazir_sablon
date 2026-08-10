@@ -38,8 +38,8 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
     return () => window.removeEventListener('scroll', handleScroll);
   }, [config.navigation]);
 
-  const shortNameText = config.shortName || config.business?.shortName || config.businessName || 'İA';
-  const monogram = shortNameText
+  const shortNameText = config.shortName || config.business?.shortName || config.businessName || 'İşletme Adı';
+  const monogram = (shortNameText || 'İA')
     .split(' ')
     .filter(Boolean)
     .map((w: string) => w[0])
@@ -57,15 +57,13 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
   const isWaType = primaryCta.type === 'whatsapp' && !!waLink;
 
   const headerPositionStyle = isEditorPreview
-    ? 'sticky top-0 z-20 w-full'
-    : 'fixed top-0 left-0 right-0 z-40';
+    ? 'relative z-20 w-full'
+    : 'sticky top-0 z-40';
 
   return (
     <header
-      className={`${headerPositionStyle} transition-all duration-300 ${
-        isScrolled
-          ? 'py-3 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-md border-b border-slate-200/50 dark:border-zinc-800/50'
-          : 'py-5 bg-transparent'
+      className={`${headerPositionStyle} transition-all duration-300 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-slate-200/60 dark:border-zinc-800/60 ${
+        isScrolled ? 'py-3 shadow-md' : 'py-4'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,7 +77,6 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
                   alt={config.logoAlt || shortNameText}
                   fill
                   className="object-contain object-left"
-                  placeholderLabel={shortNameText}
                   priority
                 />
               </div>
@@ -88,7 +85,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
                 <div className="w-10 h-10 rounded-xl bg-brand-primary text-white flex items-center justify-center font-extrabold text-base tracking-wider shadow-md shadow-brand-primary/20 group-hover:scale-105 transition-transform">
                   {monogram}
                 </div>
-                <span className="font-bold text-lg text-foreground tracking-tight group-hover:text-brand-primary transition-colors">
+                <span className="font-extrabold text-lg text-foreground tracking-tight group-hover:text-brand-primary transition-colors">
                   {shortNameText}
                 </span>
               </div>
@@ -96,7 +93,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1 bg-slate-100/60 dark:bg-zinc-900/60 backdrop-blur-md p-1.5 rounded-full border border-slate-200/60 dark:border-zinc-800/60">
+          <nav className="hidden md:flex items-center gap-1 bg-slate-100/80 dark:bg-zinc-900/80 backdrop-blur-md p-1.5 rounded-full border border-slate-200/80 dark:border-zinc-800/80">
             {(config.navigation || []).map((item: any) => {
               const sectionId = item.href.replace('#', '');
               const isActive = activeSection === sectionId;
@@ -108,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
                   className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
                     isActive
                       ? 'bg-brand-primary text-white shadow-sm'
-                      : 'text-muted hover:text-foreground hover:bg-slate-200/50 dark:hover:bg-zinc-800/50'
+                      : 'text-muted hover:text-foreground hover:bg-slate-200/60 dark:hover:bg-zinc-800/60'
                   }`}
                 >
                   {item.label}

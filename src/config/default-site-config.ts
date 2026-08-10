@@ -2,8 +2,7 @@ import { SiteConfig } from '@/types/site-config';
 
 /**
  * NEUTRAL STARTER DEFAULT CONFIG
- * All built-in stock photos and fake business contact details are cleared.
- * Displays clean upload placeholders for un-configured image fields.
+ * Clean starter template with infinite river Google reviews and neutral business content.
  */
 export const defaultSiteConfig: SiteConfig = {
   schemaVersion: 2,
@@ -125,7 +124,7 @@ export const defaultSiteConfig: SiteConfig = {
     highlights: [
       'Kalite Garantisi ve Standartlara Tam Uyumluluk',
       'Şeffaf İletişim ve Süreç Takibi',
-      'Kişiye Özel Esnek Bakım ve Çözüm Seçenekleri',
+      'Kişiye Özel Esnek Çözüm Seçenekleri',
     ],
   },
 
@@ -137,35 +136,35 @@ export const defaultSiteConfig: SiteConfig = {
       {
         id: 'service-1',
         title: 'Örnek Hizmet Başlığı 1',
-        description: 'Hizmetinizin kapsamı, sağladığı faydalar ve sunduğunuz ayrıcalıklar hakkında kısa açıklama.',
+        description: 'Hizmetinizin kapsamı ve sunduğunuz ayrıcalıklar hakkında kısa açıklama.',
         price: '₺500',
         duration: '45 Dk',
         category: 'Temel Paket',
         image: '',
         iconName: 'Sparkles',
-        buttonText: 'Detaylı Bilgi Al',
+        buttonText: 'Bilgi Al',
       },
       {
         id: 'service-2',
         title: 'Örnek Hizmet Başlığı 2',
-        description: 'Müşterilerinizin sıklıkla tercih ettiği popüler bir hizmet veya ürün kartı örneği.',
+        description: 'Müşterilerinizin sıklıkla tercih ettiği popüler bir hizmet veya ürün kartı.',
         price: '₺850',
         duration: '60 Dk',
         category: 'Popüler',
         image: '',
         iconName: 'Zap',
-        buttonText: 'Detaylı Bilgi Al',
+        buttonText: 'Bilgi Al',
       },
       {
         id: 'service-3',
         title: 'Örnek Hizmet Başlığı 3',
-        description: 'Kapsamlı veya üst düzey paket tekliflerinizi öne çıkarabileceğiniz hizmet detay alanı.',
+        description: 'Kapsamlı veya üst düzey paket tekliflerinizi öne çıkarabileceğiniz alan.',
         price: '₺1.200',
         duration: '90 Dk',
         category: 'Premium',
         image: '',
         iconName: 'Crown',
-        buttonText: 'Detaylı Bilgi Al',
+        buttonText: 'Bilgi Al',
       },
     ],
   },
@@ -178,26 +177,26 @@ export const defaultSiteConfig: SiteConfig = {
     steps: [
       {
         step: '01',
-        title: 'İlk Görüşme & İhtiyaç Analizi',
-        description: 'Taleplerinizi dinliyor, işletmeniz veya ihtiyacınız için en uygun planı çıkarıyoruz.',
+        title: 'İlk Görüşme & Analiz',
+        description: 'Taleplerinizi dinliyor, en uygun planı çıkarıyoruz.',
         iconName: 'MessageSquare',
       },
       {
         step: '02',
-        title: 'Kişiselleştirilmiş Planlama',
-        description: 'Size en uygun takvimi ve hizmet içeriğini netleştiriyoruz.',
+        title: 'Planlama',
+        description: 'Size en uygun takvimi ve içeriği netleştiriyoruz.',
         iconName: 'CalendarCheck',
       },
       {
         step: '03',
-        title: 'Uygulama & Hizmet Sunumu',
-        description: 'Steril, huzurlu ve profesyonel ortamda çalışmamızı gerçekleştiriyoruz.',
+        title: 'Uygulama',
+        description: 'Steril ve profesyonel ortamda çalışmamızı gerçekleştiriyoruz.',
         iconName: 'HeartHandshake',
       },
       {
         step: '04',
         title: 'Takip & Destek',
-        description: 'Hizmet sonrası memnuniyetinizi takip ediyor ve öneriler sunuyoruz.',
+        description: 'Hizmet sonrası memnuniyetinizi takip ediyoruz.',
         iconName: 'Sparkles',
       },
     ],
@@ -242,16 +241,52 @@ export const defaultSiteConfig: SiteConfig = {
 
   reviews: {
     enabled: true,
-    layoutStyle: 'cards',
+    layoutStyle: 'marquee',
     items: [
       {
         id: 'rev-1',
-        name: 'Örnek Müşteri Yorumu 1',
-        role: 'Müşteri',
-        comment: 'Hizmet kalitesi ve güler yüzlü yaklaşım çok başarılıydı.',
+        name: 'Ahmet Yılmaz',
+        role: 'Yerel Rehber',
+        comment: 'Hizmet kalitesi harikaydı, çalışanlar son derece güler yüzlü ve ilgiliydi. Kesinlikle tavsiye ediyorum!',
         rating: 5,
-        date: 'Yakın zamanda',
-        source: 'Google',
+        date: '1 hafta önce',
+        source: 'Google Haritalar',
+      },
+      {
+        id: 'rev-2',
+        name: 'Elif Kaya',
+        role: 'Doğrulanmış Müşteri',
+        comment: 'Randevu saatine tam uyuldu, ortam tertemiz ve çok ferahtı. İlgilerinden dolayı teşekkür ederim.',
+        rating: 5,
+        date: '2 hafta önce',
+        source: 'Google Haritalar',
+      },
+      {
+        id: 'rev-3',
+        name: 'Mehmet Demir',
+        role: 'Müşteri',
+        comment: 'Tavsiye üzerine geldik ve beklentimizin çok üzerinde bir profesyonellik gördük. 5 yıldızı hak ediyorlar.',
+        rating: 5,
+        date: '1 ay önce',
+        source: 'Google Haritalar',
+      },
+      {
+        id: 'rev-4',
+        name: 'Selin Öztürk',
+        role: 'Yerel Rehber',
+        comment: 'Fiyat/performans açısından şehirdeki en başarılı işletme. Süreç boyunca her soruya sabırla cevap verdiler.',
+        rating: 5,
+        date: '3 hafta önce',
+        source: 'Google Haritalar',
+      },
+      {
+        id: 'rev-5',
+        name: 'Caner Şahin',
+        role: 'Müşteri',
+        comment: 'İşlerini büyük bir titizlikle yapıyorlar. İlk andan itibaren kendinizi güvende hissediyorsunuz.',
+        rating: 5,
+        date: '2 ay önce',
+        source: 'Google Haritalar',
       },
     ],
   },
