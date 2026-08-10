@@ -23,9 +23,6 @@ export const metadata: Metadata = {
     title: defaultSiteConfig.seo.title,
     description: defaultSiteConfig.seo.description,
   },
-  other: {
-    'color-scheme': 'light dark',
-  },
 };
 
 export default function RootLayout({
@@ -34,20 +31,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" suppressHydrationWarning>
+    <html lang="tr" data-theme="light" style={{ colorScheme: 'light only' }} suppressHydrationWarning>
       <head>
-        <meta name="color-scheme" content="light dark" />
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090b" />
+        {/* Force ALL browsers (especially iOS Safari) to use light mode only */}
+        <meta name="color-scheme" content="light only" />
+        <meta name="supported-color-schemes" content="light only" />
+        <meta name="theme-color" content="#ffffff" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
+                  var d = document.documentElement;
+                  d.dataset.theme = 'light';
+                  d.classList.remove('dark');
+                  d.style.colorScheme = 'light only';
                   var saved = localStorage.getItem('site_builder_config_v1');
                   if (saved) {
                     var parsed = JSON.parse(saved);
-                    if (parsed?.language) document.documentElement.lang = parsed.language;
+                    if (parsed && parsed.language) d.lang = parsed.language;
                   }
                 } catch(e) {}
               })();
