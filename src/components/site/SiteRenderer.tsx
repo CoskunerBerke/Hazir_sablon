@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { SiteConfig } from '@/types/site-config';
 import { generateCssVariablesFromConfig } from '@/lib/theme/theme-generator';
 import { t } from '@/i18n/translations';
+import { getEffectiveConfig } from '@/lib/i18n';
 import { applyThemeToDocument } from '@/store/use-site-store';
 import { Header } from '../layout/Header';
 import { HeroSection } from '../sections/HeroSection';
@@ -30,7 +31,10 @@ export const SiteRenderer: React.FC<SiteRendererProps> = ({
   onSelectSection,
   selectedSectionId,
 }) => {
-  const { sectionOrder = [], sectionVisibility = {}, features = {}, theme, language = 'tr' } = config || {};
+  const language = config?.language || 'tr';
+  const effectiveConfig = getEffectiveConfig(config, language);
+
+  const { sectionOrder = [], sectionVisibility = {}, features = {}, theme } = effectiveConfig || {};
 
   // Dynamically compute CSS variables from live store config
   const themeCssVars = theme ? generateCssVariablesFromConfig(theme) : {};
@@ -66,21 +70,21 @@ export const SiteRenderer: React.FC<SiteRendererProps> = ({
     const sectionContent = (() => {
       switch (sectionId) {
         case 'hero':
-          return <HeroSection config={config as any} />;
+          return <HeroSection config={effectiveConfig as any} />;
         case 'trust':
-          return <TrustSection config={config as any} />;
+          return <TrustSection config={effectiveConfig as any} />;
         case 'about':
-          return <AboutSection config={config as any} />;
+          return <AboutSection config={effectiveConfig as any} />;
         case 'services':
-          return <ServicesSection config={config as any} />;
+          return <ServicesSection config={effectiveConfig as any} />;
         case 'special':
-          return <SpecialSection config={config as any} />;
+          return <SpecialSection config={effectiveConfig as any} />;
         case 'gallery':
-          return <GallerySection config={config as any} />;
+          return <GallerySection config={effectiveConfig as any} />;
         case 'reviews':
-          return <ReviewsSection config={config as any} />;
+          return <ReviewsSection config={effectiveConfig as any} />;
         case 'contact':
-          return <ContactSection config={config as any} />;
+          return <ContactSection config={effectiveConfig as any} />;
         default:
           return null;
       }
@@ -137,14 +141,14 @@ export const SiteRenderer: React.FC<SiteRendererProps> = ({
         </div>
       )}
 
-      <Header config={config as any} isEditorPreview={isEditorPreview} />
+      <Header config={effectiveConfig as any} isEditorPreview={isEditorPreview} />
 
       <main className="flex-1">
         {sectionOrder.map((sectionId) => renderSectionComponent(sectionId))}
       </main>
 
-      <Footer config={config as any} />
-      <FloatingCTA config={config as any} />
+      <Footer config={effectiveConfig as any} />
+      <FloatingCTA config={effectiveConfig as any} />
     </div>
   );
 };

@@ -1,11 +1,5 @@
-import { SiteConfig } from '@/types/site-config';
+import { SiteConfig, LanguageCode } from '@/types/site-config';
 
-/**
- * English Content Preset Translator
- * When the user switches language to English ('en'), this function converts
- * all built-in sections, titles, navigation items, trust points, and sample text
- * to professional English while preserving custom images and links.
- */
 export const ENGLISH_PRESET = {
   navigation: [
     { id: 'about', label: 'About Us', href: '#about', visible: true },
@@ -15,6 +9,13 @@ export const ENGLISH_PRESET = {
     { id: 'reviews', label: 'Reviews', href: '#reviews', visible: true },
     { id: 'contact', label: 'Contact', href: '#contact', visible: true },
   ],
+  business: {
+    name: 'Your Business Name',
+    shortName: 'Brand Name',
+    industry: 'Professional Services',
+    tagline: 'Write Your Tagline and Value Proposition Here',
+    description: 'Introduce your expertise, high standards, and value to your clients in a professional manner.',
+  },
   hero: {
     badge: '✨ Welcome to Our Studio',
     title: 'Unforgettable Experience & Premium Services',
@@ -42,31 +43,41 @@ export const ENGLISH_PRESET = {
     ],
   },
   services: {
+    badge: 'Services & Products',
+    title: 'Professional Solutions Tailored for You',
+    subtitle: 'High quality offerings designed to exceed your expectations.',
     items: [
       {
+        id: 'service-1',
         title: 'Essential Care Package',
         description: 'Comprehensive baseline service designed for complete satisfaction and immediate results.',
         price: '$50',
         duration: '45 Min',
         category: 'Starter',
+        buttonText: 'Learn More',
       },
       {
+        id: 'service-2',
         title: 'Signature Premium Service',
         description: 'Our most popular offering, crafted for maximum comfort and superior quality.',
         price: '$85',
         duration: '60 Min',
         category: 'Popular',
+        buttonText: 'Learn More',
       },
       {
+        id: 'service-3',
         title: 'Exclusive VIP Experience',
         description: 'All-inclusive top-tier package featuring personalized consultation and luxury details.',
         price: '$120',
         duration: '90 Min',
         category: 'VIP',
+        buttonText: 'Learn More',
       },
     ],
   },
   specialSection: {
+    badge: 'Our Process',
     title: 'Our Service & Working Process',
     subtitle: '4 simple steps from initial consultation to complete satisfaction',
     steps: [
@@ -76,9 +87,18 @@ export const ENGLISH_PRESET = {
       { step: '04', title: 'Aftercare & Support', description: 'We ensure long-term satisfaction and follow-up care.', iconName: 'Sparkles' },
     ],
   },
+  gallery: {
+    badge: 'Gallery',
+    title: 'Our Atmosphere & Recent Work',
+    subtitle: 'Take a look inside our facilities and showcased client results.',
+  },
   reviews: {
+    badge: 'Google Reviews',
+    title: 'Real Experiences of Our Valued Clients',
+    subtitle: 'Verified feedback shared by clients on Google Maps.',
     items: [
       {
+        id: 'rev-1',
         name: 'Alexander Wright',
         role: 'Local Guide',
         comment: 'Outstanding service and incredibly welcoming staff! Highly recommended for anyone seeking top quality.',
@@ -86,6 +106,7 @@ export const ENGLISH_PRESET = {
         source: 'Google Maps',
       },
       {
+        id: 'rev-2',
         name: 'Sophia Martinez',
         role: 'Verified Guest',
         comment: 'Punctual, spotless environment, and remarkable attention to detail. I am thoroughly impressed!',
@@ -93,23 +114,26 @@ export const ENGLISH_PRESET = {
         source: 'Google Maps',
       },
       {
+        id: 'rev-3',
         name: 'David Chen',
         role: 'Regular Client',
         comment: 'Exceeded all my expectations. Professionalism at its finest—definitely worth 5 stars!',
         date: '1 month ago',
         source: 'Google Maps',
       },
-      {
-        name: 'Emma Johnson',
-        role: 'Local Guide',
-        comment: 'The best value and quality in town. Friendly, skilled, and incredibly accommodating.',
-        date: '3 weeks ago',
-        source: 'Google Maps',
-      },
     ],
   },
-  announcementText: '🎉 Special Welcome Offer for New Customers!',
-  ctaText: 'Chat on WhatsApp',
+  contact: {
+    badge: 'Contact & Location',
+    title: 'Get in Touch With Us',
+    subtitle: 'Reach out for inquiries, appointments, or consultation requests.',
+    address: '123 Business Avenue, Suite 400',
+  },
+  features: {
+    announcementText: '🎉 Special Welcome Offer for New Customers!',
+  },
+  footerText: 'We are dedicated to providing you with the highest quality of service.',
+  copyrightText: 'All rights reserved.',
 };
 
 export const TURKISH_PRESET = {
@@ -121,6 +145,13 @@ export const TURKISH_PRESET = {
     { id: 'reviews', label: 'Yorumlar', href: '#reviews', visible: true },
     { id: 'contact', label: 'İletişim', href: '#contact', visible: true },
   ],
+  business: {
+    name: 'İşletme Adınız',
+    shortName: 'Marka Adı',
+    industry: 'Genel Hizmetler',
+    tagline: 'Sloganınızı ve Ana Değer Önerinizi Buraya Yazın',
+    description: 'İşletmenizin kalitesini, vizyonunu ve sunduğunuz değerli çözümleri müşterilerinize profesyonel biçimde tanıtın.',
+  },
   hero: {
     badge: '✨ Hoş Geldiniz',
     title: 'Unutulmaz Bir Deneyim ve Profesyonel Hizmetler',
@@ -148,31 +179,41 @@ export const TURKISH_PRESET = {
     ],
   },
   services: {
+    badge: 'Hizmetler & Ürünler',
+    title: 'Size Özel Sunulan Profesyonel Bakım ve Çözümler',
+    subtitle: 'İhtiyacınıza en uygun hizmet paketini seçin veya uzman ekibimizden özel tavsiye alın.',
     items: [
       {
+        id: 'service-1',
         title: 'Örnek Hizmet 1',
         description: 'Hizmetinizin kapsamı ve sunduğunuz ayrıcalıklar hakkında kısa açıklama.',
         price: '₺500',
         duration: '45 Dk',
         category: 'Temel',
+        buttonText: 'Bilgi Al',
       },
       {
+        id: 'service-2',
         title: 'Örnek Hizmet 2',
         description: 'Müşterilerinizin sıklıkla tercih ettiği popüler bir hizmet veya ürün kartı.',
         price: '₺850',
         duration: '60 Dk',
         category: 'Popüler',
+        buttonText: 'Bilgi Al',
       },
       {
+        id: 'service-3',
         title: 'Örnek Hizmet 3',
         description: 'Kapsamlı veya üst düzey paket tekliflerinizi öne çıkarabileceğiniz alan.',
         price: '₺1.200',
         duration: '90 Dk',
         category: 'Premium',
+        buttonText: 'Bilgi Al',
       },
     ],
   },
   specialSection: {
+    badge: 'Hizmet Süreci',
     title: 'Çalışma ve Hizmet Sürecimiz',
     subtitle: 'Müşteri talebinden başarıya ulaşana kadar 4 kolay adım',
     steps: [
@@ -182,9 +223,18 @@ export const TURKISH_PRESET = {
       { step: '04', title: 'Takip & Destek', description: 'Hizmet sonrası memnuniyetinizi takip ediyoruz.', iconName: 'Sparkles' },
     ],
   },
+  gallery: {
+    badge: 'Galeri',
+    title: 'Atmosferimiz ve Çalışmalarımız',
+    subtitle: 'İşletmemizden ve gerçekleştirdiğimiz çalışmalardan karelere göz atın.',
+  },
   reviews: {
+    badge: 'Google Müşteri Yorumları',
+    title: 'Bizi Tercih Edenlerin Gerçek Deneyimleri',
+    subtitle: 'Google Haritalar üzerinden paylaşılan doğrulanmış danışan ve müşteri geri bildirimleri.',
     items: [
       {
+        id: 'rev-1',
         name: 'Ahmet Yılmaz',
         role: 'Yerel Rehber',
         comment: 'Hizmet kalitesi harikaydı, çalışanlar son derece güler yüzlü ve ilgiliydi. Kesinlikle tavsiye ediyorum!',
@@ -192,6 +242,7 @@ export const TURKISH_PRESET = {
         source: 'Google Haritalar',
       },
       {
+        id: 'rev-2',
         name: 'Elif Kaya',
         role: 'Doğrulanmış Müşteri',
         comment: 'Randevu saatine tam uyuldu, ortam tertemiz ve çok ferahtı. İlgilerinden dolayı teşekkür ederim.',
@@ -199,6 +250,7 @@ export const TURKISH_PRESET = {
         source: 'Google Haritalar',
       },
       {
+        id: 'rev-3',
         name: 'Mehmet Demir',
         role: 'Müşteri',
         comment: 'Tavsiye üzerine geldik ve beklentimizin çok üzerinde bir profesyonellik gördük. 5 yıldızı hak ediyorlar.',
@@ -207,75 +259,257 @@ export const TURKISH_PRESET = {
       },
     ],
   },
-  announcementText: '🎉 Yeni Müşterilerimize Özel Ön Danışmanlık Hediye!',
-  ctaText: "WhatsApp'tan Yazın",
+  contact: {
+    badge: 'İletişim & Konum',
+    title: 'Bizimle İletişime Geçin veya Ziyaret Edin',
+    subtitle: 'Sorularınız, randevu talepleriniz veya bilgi almak için tek tıkla ulaşın.',
+    address: 'Atatürk Caddesi, No: 100, Çankaya / Ankara',
+  },
+  features: {
+    announcementText: '🎉 Yeni Müşterilerimize Özel Ön Danışmanlık Hediye!',
+  },
+  footerText: 'Sizlere en yüksek kalitede hizmet sunmak için buradayız.',
+  copyrightText: 'Tüm hakları saklıdır.',
 };
+
+/**
+ * Extracts a locale content object from a SiteConfig or returns default preset
+ */
+export function extractContent(config: SiteConfig, lang: LanguageCode) {
+  const preset = lang === 'en' ? ENGLISH_PRESET : TURKISH_PRESET;
+  const existing = (config as any).i18nContent?.[lang];
+
+  if (existing) return existing;
+
+  return {
+    business: {
+      name: config.business?.name || preset.business.name,
+      shortName: config.business?.shortName || preset.business.shortName,
+      industry: config.business?.industry || preset.business.industry,
+      tagline: config.business?.tagline || preset.business.tagline,
+      description: config.business?.description || preset.business.description,
+    },
+    hero: {
+      badge: config.hero?.badge || preset.hero.badge,
+      title: config.hero?.title || preset.hero.title,
+      description: config.hero?.description || preset.hero.description,
+      primaryCtaText: config.hero?.primaryCta?.text || preset.hero.primaryCtaText,
+      secondaryCtaText: config.hero?.secondaryCta?.text || preset.hero.secondaryCtaText,
+    },
+    trustPoints: Array.isArray(config.trustPoints) && config.trustPoints.length > 0
+      ? config.trustPoints.map((tp, idx) => ({
+          title: tp.title || preset.trustPoints[idx]?.title || preset.trustPoints[0].title,
+          description: tp.description || preset.trustPoints[idx]?.description || preset.trustPoints[0].description,
+          iconName: tp.iconName || 'ShieldCheck',
+        }))
+      : preset.trustPoints,
+    about: {
+      badge: config.about?.badge || preset.about.badge,
+      title: config.about?.title || preset.about.title,
+      subtitle: config.about?.subtitle || preset.about.subtitle,
+      text: Array.isArray(config.about?.text) ? config.about.text : preset.about.text,
+      highlights: Array.isArray(config.about?.highlights) ? config.about.highlights : preset.about.highlights,
+    },
+    services: {
+      badge: (config.services as any)?.badge || preset.services.badge,
+      title: (config.services as any)?.title || preset.services.title,
+      subtitle: (config.services as any)?.subtitle || preset.services.subtitle,
+      items: Array.isArray(config.services?.items)
+        ? config.services.items.map((item, idx) => ({
+            id: item.id || `service-${idx + 1}`,
+            title: item.title || preset.services.items[idx]?.title || 'Service',
+            description: item.description || preset.services.items[idx]?.description || '',
+            price: item.price || preset.services.items[idx]?.price || '',
+            duration: item.duration || preset.services.items[idx]?.duration || '',
+            category: item.category || preset.services.items[idx]?.category || '',
+            buttonText: item.buttonText || preset.services.items[idx]?.buttonText || 'Learn More',
+          }))
+        : preset.services.items,
+    },
+    specialSection: {
+      badge: (config.specialSection as any)?.badge || preset.specialSection.badge,
+      title: config.specialSection?.title || preset.specialSection.title,
+      subtitle: config.specialSection?.subtitle || preset.specialSection.subtitle,
+      steps: Array.isArray(config.specialSection?.steps)
+        ? config.specialSection.steps.map((st, idx) => ({
+            step: st.step || `0${idx + 1}`,
+            title: st.title || preset.specialSection.steps[idx]?.title || '',
+            description: st.description || preset.specialSection.steps[idx]?.description || '',
+            iconName: st.iconName || 'Sparkles',
+          }))
+        : preset.specialSection.steps,
+    },
+    gallery: {
+      badge: (config.gallery as any)?.badge || preset.gallery.badge,
+      title: (config.gallery as any)?.title || preset.gallery.title,
+      subtitle: (config.gallery as any)?.subtitle || preset.gallery.subtitle,
+    },
+    reviews: {
+      badge: (config.reviews as any)?.badge || preset.reviews.badge,
+      title: (config.reviews as any)?.title || preset.reviews.title,
+      subtitle: (config.reviews as any)?.subtitle || preset.reviews.subtitle,
+      items: Array.isArray(config.reviews?.items)
+        ? config.reviews.items.map((rev, idx) => ({
+            id: rev.id || `rev-${idx + 1}`,
+            name: rev.name || preset.reviews.items[idx]?.name || '',
+            role: rev.role || preset.reviews.items[idx]?.role || '',
+            comment: rev.comment || preset.reviews.items[idx]?.comment || '',
+            date: rev.date || preset.reviews.items[idx]?.date || '',
+            source: rev.source || 'Google Maps',
+          }))
+        : preset.reviews.items,
+    },
+    contact: {
+      badge: (config.contact as any)?.badge || preset.contact.badge,
+      title: (config.contact as any)?.title || preset.contact.title,
+      subtitle: (config.contact as any)?.subtitle || preset.contact.subtitle,
+      address: config.contact?.address || preset.contact.address,
+    },
+    features: {
+      announcementText: config.features?.announcementText || preset.features.announcementText,
+    },
+    footerText: config.footerText || preset.footerText,
+    copyrightText: config.copyrightText || preset.copyrightText,
+  };
+}
+
+/**
+ * Returns a cloned SiteConfig with effective localized texts for the given language
+ */
+export function getEffectiveConfig(config: SiteConfig, lang: LanguageCode = 'tr'): SiteConfig {
+  const effective = JSON.parse(JSON.stringify(config)) as SiteConfig;
+  effective.language = lang;
+
+  // Initialize i18nContent container if missing
+  if (!(effective as any).i18nContent) {
+    (effective as any).i18nContent = {
+      tr: extractContent(config, 'tr'),
+      en: extractContent(config, 'en'),
+    };
+  }
+
+  const content = (effective as any).i18nContent[lang] || extractContent(config, lang);
+
+  // Apply localized business
+  if (content.business) {
+    effective.business.name = content.business.name || effective.business.name;
+    effective.business.shortName = content.business.shortName || effective.business.shortName;
+    effective.business.industry = content.business.industry || effective.business.industry;
+    effective.business.tagline = content.business.tagline || effective.business.tagline;
+    effective.business.description = content.business.description || effective.business.description;
+  }
+
+  // Apply localized hero
+  if (content.hero) {
+    effective.hero.badge = content.hero.badge ?? effective.hero.badge;
+    effective.hero.title = content.hero.title || effective.hero.title;
+    effective.hero.description = content.hero.description || effective.hero.description;
+    if (effective.hero.primaryCta) effective.hero.primaryCta.text = content.hero.primaryCtaText || effective.hero.primaryCta.text;
+    if (effective.hero.secondaryCta) effective.hero.secondaryCta.text = content.hero.secondaryCtaText || effective.hero.secondaryCta.text;
+  }
+
+  // Apply localized trust points
+  if (Array.isArray(content.trustPoints) && Array.isArray(effective.trustPoints)) {
+    content.trustPoints.forEach((tp: any, idx: number) => {
+      if (effective.trustPoints[idx]) {
+        effective.trustPoints[idx].title = tp.title || effective.trustPoints[idx].title;
+        effective.trustPoints[idx].description = tp.description || effective.trustPoints[idx].description;
+      }
+    });
+  }
+
+  // Apply localized about
+  if (content.about) {
+    effective.about.badge = content.about.badge ?? effective.about.badge;
+    effective.about.title = content.about.title || effective.about.title;
+    effective.about.subtitle = content.about.subtitle ?? effective.about.subtitle;
+    if (Array.isArray(content.about.text)) effective.about.text = content.about.text;
+    if (Array.isArray(content.about.highlights)) effective.about.highlights = content.about.highlights;
+  }
+
+  // Apply localized services
+  if (content.services) {
+    (effective.services as any).badge = content.services.badge ?? (effective.services as any).badge;
+    (effective.services as any).title = content.services.title || (effective.services as any).title;
+    (effective.services as any).subtitle = content.services.subtitle ?? (effective.services as any).subtitle;
+
+    if (Array.isArray(content.services.items) && Array.isArray(effective.services?.items)) {
+      content.services.items.forEach((item: any, idx: number) => {
+        if (effective.services.items[idx]) {
+          effective.services.items[idx].title = item.title || effective.services.items[idx].title;
+          effective.services.items[idx].description = item.description || effective.services.items[idx].description;
+          if (item.price) effective.services.items[idx].price = item.price;
+          if (item.duration) effective.services.items[idx].duration = item.duration;
+          if (item.category) effective.services.items[idx].category = item.category;
+          if (item.buttonText) effective.services.items[idx].buttonText = item.buttonText;
+        }
+      });
+    }
+  }
+
+  // Apply localized specialSection
+  if (content.specialSection) {
+    (effective.specialSection as any).badge = content.specialSection.badge ?? (effective.specialSection as any).badge;
+    effective.specialSection.title = content.specialSection.title || effective.specialSection.title;
+    effective.specialSection.subtitle = content.specialSection.subtitle ?? effective.specialSection.subtitle;
+
+    const steps = effective.specialSection?.steps;
+    if (Array.isArray(content.specialSection.steps) && Array.isArray(steps)) {
+      content.specialSection.steps.forEach((st: any, idx: number) => {
+        if (steps[idx]) {
+          steps[idx].title = st.title || steps[idx].title;
+          steps[idx].description = st.description || steps[idx].description;
+        }
+      });
+    }
+  }
+
+  // Apply localized gallery
+  if (content.gallery) {
+    (effective.gallery as any).badge = content.gallery.badge ?? (effective.gallery as any).badge;
+    (effective.gallery as any).title = content.gallery.title || (effective.gallery as any).title;
+    (effective.gallery as any).subtitle = content.gallery.subtitle ?? (effective.gallery as any).subtitle;
+  }
+
+  // Apply localized reviews
+  if (content.reviews) {
+    (effective.reviews as any).badge = content.reviews.badge ?? (effective.reviews as any).badge;
+    (effective.reviews as any).title = content.reviews.title || (effective.reviews as any).title;
+    (effective.reviews as any).subtitle = content.reviews.subtitle ?? (effective.reviews as any).subtitle;
+
+    const revItems = effective.reviews?.items;
+    if (Array.isArray(content.reviews.items) && Array.isArray(revItems)) {
+      content.reviews.items.forEach((rev: any, idx: number) => {
+        if (revItems[idx]) {
+          revItems[idx].name = rev.name || revItems[idx].name;
+          revItems[idx].role = rev.role || revItems[idx].role;
+          revItems[idx].comment = rev.comment || revItems[idx].comment;
+          if (rev.date) revItems[idx].date = rev.date;
+        }
+      });
+    }
+  }
+
+  // Apply localized contact
+  if (content.contact) {
+    (effective.contact as any).badge = content.contact.badge ?? (effective.contact as any).badge;
+    (effective.contact as any).title = content.contact.title || (effective.contact as any).title;
+    (effective.contact as any).subtitle = content.contact.subtitle ?? (effective.contact as any).subtitle;
+    if (content.contact.address) effective.contact.address = content.contact.address;
+  }
+
+  // Apply features announcementText
+  if (content.features?.announcementText && effective.features) {
+    effective.features.announcementText = content.features.announcementText;
+  }
+
+  return effective;
+}
 
 /**
  * Switches full site language between Turkish ('tr') and English ('en')
  */
 export function translateConfigToLanguage(draft: SiteConfig, lang: 'tr' | 'en') {
   draft.language = lang;
-
-  const preset = lang === 'en' ? ENGLISH_PRESET : TURKISH_PRESET;
-
-  // 1. Navigation
-  draft.navigation = preset.navigation;
-
-  // 2. Hero
-  draft.hero.badge = preset.hero.badge;
-  draft.hero.title = preset.hero.title;
-  draft.hero.description = preset.hero.description;
-  draft.hero.primaryCta.text = preset.hero.primaryCtaText;
-  if (draft.hero.secondaryCta) draft.hero.secondaryCta.text = preset.hero.secondaryCtaText;
-
-  // 3. Trust Points
-  draft.trustPoints = preset.trustPoints;
-
-  // 4. About
-  draft.about.badge = preset.about.badge;
-  draft.about.title = preset.about.title;
-  draft.about.subtitle = preset.about.subtitle;
-  draft.about.text = preset.about.text;
-  draft.about.highlights = preset.about.highlights;
-
-  // 5. Services
-  if (Array.isArray(draft.services?.items)) {
-    draft.services.items.forEach((item, idx) => {
-      const p = preset.services.items[idx] || preset.services.items[0];
-      item.title = p.title;
-      item.description = p.description;
-      item.price = p.price;
-      item.duration = p.duration;
-      item.category = p.category;
-    });
-  }
-
-  // 6. Special Section
-  draft.specialSection.title = preset.specialSection.title;
-  draft.specialSection.subtitle = preset.specialSection.subtitle;
-  if (Array.isArray(draft.specialSection.steps)) {
-    draft.specialSection.steps.forEach((step, idx) => {
-      const p = preset.specialSection.steps[idx] || preset.specialSection.steps[0];
-      step.title = p.title;
-      step.description = p.description;
-    });
-  }
-
-  // 7. Reviews
-  if (Array.isArray(draft.reviews?.items)) {
-    draft.reviews.items.forEach((item, idx) => {
-      const p = preset.reviews.items[idx] || preset.reviews.items[0];
-      item.name = p.name;
-      item.role = p.role;
-      item.comment = p.comment;
-      item.date = p.date;
-    });
-  }
-
-  // 8. Announcement & Header
-  if (draft.features) draft.features.announcementText = preset.announcementText;
-  if (draft.header) draft.header.ctaText = preset.ctaText;
-
-  return draft;
+  return getEffectiveConfig(draft, lang);
 }
