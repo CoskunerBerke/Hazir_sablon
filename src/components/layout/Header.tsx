@@ -8,9 +8,10 @@ import { formatPhoneLink, formatWhatsAppLink } from '@/lib/validation/phone';
 
 interface HeaderProps {
   config: any;
+  isEditorPreview?: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = ({ config }) => {
+export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('');
@@ -55,11 +56,15 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
   const finalCtaHref = primaryCta.type === 'whatsapp' ? (waLink || '#contact') : (primaryCta.href || '#contact');
   const isWaType = primaryCta.type === 'whatsapp' && !!waLink;
 
+  const headerPositionStyle = isEditorPreview
+    ? 'sticky top-0 z-20 w-full'
+    : 'fixed top-0 left-0 right-0 z-40';
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+      className={`${headerPositionStyle} transition-all duration-300 ${
         isScrolled
-          ? 'py-3 bg-white/85 dark:bg-zinc-950/85 backdrop-blur-md shadow-md border-b border-slate-200/50 dark:border-zinc-800/50'
+          ? 'py-3 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-md border-b border-slate-200/50 dark:border-zinc-800/50'
           : 'py-5 bg-transparent'
       }`}
     >
@@ -148,7 +153,7 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-x-0 top-[65px] z-50 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xl border-b border-slate-200 dark:border-zinc-800 p-6 shadow-2xl space-y-6 animate-fadeIn">
+        <div className="md:hidden absolute inset-x-0 top-[100%] z-50 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xl border-b border-slate-200 dark:border-zinc-800 p-6 shadow-2xl space-y-6 animate-fadeIn">
           <nav className="flex flex-col space-y-3">
             {(config.navigation || []).map((item: any) => (
               <a

@@ -62,9 +62,9 @@ export const EditorLayout: React.FC = () => {
   ];
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden bg-slate-100 dark:bg-zinc-950 select-none">
+    <div className="h-screen w-screen flex flex-col overflow-hidden bg-slate-100 dark:bg-zinc-950">
       {/* 1. TOPBAR CONTROLS */}
-      <header className="h-14 bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 px-4 flex items-center justify-between z-30 shrink-0 shadow-xs">
+      <header className="h-14 bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 px-4 flex items-center justify-between z-50 relative shrink-0 shadow-xs">
         {/* Left: Brand & Undo/Redo */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -164,12 +164,12 @@ export const EditorLayout: React.FC = () => {
         </div>
 
         {/* Right: Go to Published Site View */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative z-50">
           <a
             href="/site"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-brand-primary text-white shadow-sm hover:bg-brand-primary-hover transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-brand-primary text-white shadow-sm hover:bg-brand-primary-hover transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary cursor-pointer pointer-events-auto"
           >
             <span>Yayın Görünümü</span>
             <ExternalLink className="w-3.5 h-3.5" />

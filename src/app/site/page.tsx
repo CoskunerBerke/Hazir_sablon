@@ -9,6 +9,16 @@ export default function PublishedSitePage() {
 
   useEffect(() => {
     loadFromLocalStorage();
+
+    // Real-time synchronization when editor updates config in another tab
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'site_builder_config_v1') {
+        loadFromLocalStorage();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [loadFromLocalStorage]);
 
   return <SiteRenderer config={config} isEditorPreview={false} />;

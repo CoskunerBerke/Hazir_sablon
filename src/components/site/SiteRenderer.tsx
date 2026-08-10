@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { SiteConfig } from '@/types/site-config';
+import { generateCssVariablesFromConfig } from '@/lib/theme/theme-generator';
 import { Header } from '../layout/Header';
 import { HeroSection } from '../sections/HeroSection';
 import { TrustSection } from '../sections/TrustSection';
@@ -27,7 +28,10 @@ export const SiteRenderer: React.FC<SiteRendererProps> = ({
   onSelectSection,
   selectedSectionId,
 }) => {
-  const { sectionOrder, sectionVisibility, features } = config;
+  const { sectionOrder = [], sectionVisibility = {}, features = {}, theme } = config || {};
+
+  // Dynamically compute CSS variables from live store config
+  const themeCssVars = theme ? generateCssVariablesFromConfig(theme) : {};
 
   const renderSectionComponent = (sectionId: string) => {
     if (!sectionVisibility[sectionId]) return null;
@@ -87,16 +91,33 @@ export const SiteRenderer: React.FC<SiteRendererProps> = ({
     );
   };
 
+  const feat = (features || {}) as any;
+
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-background text-foreground transition-colors duration-300">
+    <div
+      data-style-preset={theme?.preset || 'minimal'}
+      className={`min-h-screen flex flex-col justify-between bg-background text-foreground transition-colors duration-300 ${
+        theme?.mode === 'dark' ? 'dark' : ''
+      }`}
+      style={themeCssVars as React.CSSProperties}
+    >
+      {/* Inject Live Dynamic Theme CSS Variables */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          :root, [data-style-preset] {
+            ${Object.entries(themeCssVars).map(([k, v]) => `${k}: ${v};`).join('\n')}
+          }
+        `
+      }} />
+
       {/* Top Announcement Bar if enabled */}
-      {features.showAnnouncementBar && features.announcementText && (
+      {feat.showAnnouncementBar && feat.announcementText && (
         <div className="bg-brand-primary text-white text-center py-2 px-4 text-xs font-bold tracking-wide">
-          {features.announcementText}
+          {feat.announcementText}
         </div>
       )}
 
-      <Header config={config as any} />
+      <Header config={config as any} isEditorPreview={isEditorPreview} />
 
       <main className="flex-1">
         {sectionOrder.map((sectionId) => renderSectionComponent(sectionId))}

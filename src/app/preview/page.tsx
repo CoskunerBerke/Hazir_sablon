@@ -9,6 +9,15 @@ export default function PreviewPage() {
 
   useEffect(() => {
     loadFromLocalStorage();
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'site_builder_config_v1') {
+        loadFromLocalStorage();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [loadFromLocalStorage]);
 
   return <SiteRenderer config={config} isEditorPreview={false} />;

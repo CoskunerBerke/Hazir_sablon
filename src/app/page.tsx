@@ -11,9 +11,18 @@ export default function Home() {
 
   useEffect(() => {
     loadFromLocalStorage();
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'site_builder_config_v1') {
+        loadFromLocalStorage();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [loadFromLocalStorage]);
 
-  const showDemoButton = config.features.showDemoButton !== false;
+  const showDemoButton = config.features?.showDemoButton !== false;
 
   return (
     <div className="relative min-h-screen">
@@ -34,4 +43,4 @@ export default function Home() {
       )}
     </div>
   );
-};
+}
