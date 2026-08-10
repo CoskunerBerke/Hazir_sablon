@@ -31,21 +31,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" suppressHydrationWarning>
+    <html lang="tr" data-theme="light" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
+                  document.documentElement.dataset.theme = 'light';
+                  document.documentElement.classList.remove('dark');
+                  document.documentElement.style.colorScheme = 'light';
                   var saved = localStorage.getItem('site_builder_config_v1');
                   if (saved) {
                     var parsed = JSON.parse(saved);
-                    var mode = parsed?.theme?.mode || 'light';
-                    var isDark = mode === 'dark';
-                    document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
-                    document.documentElement.classList.toggle('dark', isDark);
-                    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
                     if (parsed?.language) document.documentElement.lang = parsed.language;
                   }
                 } catch(e) {}

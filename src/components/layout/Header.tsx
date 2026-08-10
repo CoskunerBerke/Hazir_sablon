@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Phone, MessageSquare, ArrowRight, Sun, Moon } from 'lucide-react';
+import { Menu, X, Phone, MessageSquare, ArrowRight } from 'lucide-react';
 import { SafeImage } from '../ui/SafeImage';
 import { formatPhoneLink, formatWhatsAppLink } from '@/lib/validation/phone';
 import { useSiteStore } from '@/store/use-site-store';
@@ -18,9 +18,8 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('');
 
-  const { setLanguage, toggleThemeMode } = useSiteStore();
+  const { setLanguage } = useSiteStore();
   const currentLang = config.language || 'tr';
-  const isDarkMode = config.theme?.mode === 'dark';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,7 +66,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
 
   return (
     <header
-      className={`${headerPositionStyle} transition-all duration-300 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-slate-200/60 dark:border-zinc-800/60 ${
+      className={`${headerPositionStyle} transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-slate-200/60 ${
         isScrolled ? 'py-3 shadow-md' : 'py-4'
       }`}
     >
@@ -93,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
                 <div className="w-10 h-10 rounded-xl bg-brand-primary text-[var(--color-on-primary)] flex items-center justify-center font-extrabold text-base tracking-wider shadow-md shadow-brand-primary/20 group-hover:scale-105 transition-transform border-0">
                   {monogram}
                 </div>
-                <span className="font-extrabold text-lg text-foreground tracking-tight group-hover:opacity-80 transition-opacity border-0">
+                <span className="font-extrabold text-lg text-slate-900 tracking-tight group-hover:opacity-80 transition-opacity border-0">
                   {shortNameText}
                 </span>
               </div>
@@ -101,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1 bg-slate-100/80 dark:bg-zinc-900/80 backdrop-blur-md p-1.5 rounded-full border border-slate-200/80 dark:border-zinc-800/80">
+          <nav className="hidden md:flex items-center gap-1 bg-slate-100/80 backdrop-blur-md p-1.5 rounded-full border border-slate-200/80">
             {(config.navigation || []).map((item: any) => {
               const sectionId = item.href.replace('#', '');
               const isActive = activeSection === sectionId;
@@ -113,7 +112,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
                   className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
                     isActive
                       ? 'bg-brand-primary text-[var(--color-on-primary)] shadow-sm'
-                      : 'text-muted hover:text-foreground hover:bg-slate-200/60 dark:hover:bg-zinc-800/60'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                   }`}
                 >
                   {item.label}
@@ -122,16 +121,16 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
             })}
           </nav>
 
-          {/* Right Action CTA & Controls (TR/EN & Dark Mode) */}
+          {/* Right Action CTA & Language Controls (TR/EN) */}
           <div className="hidden lg:flex items-center gap-3">
             {/* Language Switcher TR / EN */}
-            <div className="flex items-center bg-slate-100 dark:bg-zinc-900 p-1 rounded-full border border-slate-200 dark:border-zinc-800">
+            <div className="flex items-center bg-slate-100 p-1 rounded-full border border-slate-200">
               <button
                 onClick={() => setLanguage('tr')}
                 className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold transition-all ${
                   currentLang === 'tr'
                     ? 'bg-brand-primary text-[var(--color-on-primary)] shadow-xs'
-                    : 'text-slate-600 dark:text-zinc-400 hover:text-foreground'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
                 title="Türkçe Versiyona Geç"
               >
@@ -142,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
                 className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold transition-all ${
                   currentLang === 'en'
                     ? 'bg-brand-primary text-[var(--color-on-primary)] shadow-xs'
-                    : 'text-slate-600 dark:text-zinc-400 hover:text-foreground'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
                 title="Switch to English Version"
               >
@@ -150,20 +149,10 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
               </button>
             </div>
 
-            {/* Dark / Light Mode Toggle */}
-            <button
-              onClick={toggleThemeMode}
-              className="p-2 rounded-full bg-slate-100 dark:bg-zinc-900 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-800 border border-slate-200 dark:border-zinc-800 transition-colors focus:outline-none"
-              title={isDarkMode ? 'Aydınlık Moda Geç' : 'Karanlık Moda Geç'}
-              aria-label="Tema Modu Değiştir"
-            >
-              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400 fill-amber-400/20" /> : <Moon className="w-4 h-4 text-slate-700" />}
-            </button>
-
             {phoneLink && (
               <a
                 href={phoneLink}
-                className="hidden xl:flex items-center gap-2 text-xs font-semibold text-muted hover:text-foreground transition-colors px-2 py-2"
+                className="hidden xl:flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors px-2 py-2"
               >
                 <Phone className="w-4 h-4 text-brand-primary" />
                 <span>{config.contact?.phoneFormatted || config.contact?.phone}</span>
@@ -185,19 +174,13 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
           <div className="md:hidden flex items-center gap-2">
             <button
               onClick={() => setLanguage(currentLang === 'tr' ? 'en' : 'tr')}
-              className="px-2.5 py-1.5 rounded-xl text-xs font-extrabold bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-foreground"
+              className="px-2.5 py-1.5 rounded-xl text-xs font-extrabold bg-slate-100 border border-slate-200 text-slate-900"
             >
               {currentLang.toUpperCase()}
             </button>
             <button
-              onClick={toggleThemeMode}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-zinc-900 text-foreground"
-            >
-              {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
-            </button>
-            <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2.5 rounded-xl bg-slate-100 dark:bg-zinc-900 text-foreground hover:bg-slate-200 dark:hover:bg-zinc-800 transition-colors focus:outline-none"
+              className="p-2.5 rounded-xl bg-slate-100 text-slate-900 hover:bg-slate-200 transition-colors focus:outline-none"
               aria-label="Menüyü aç/kapat"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -208,14 +191,14 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute inset-x-0 top-[100%] z-50 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xl border-b border-slate-200 dark:border-zinc-800 p-6 shadow-2xl space-y-6 animate-fadeIn">
+        <div className="md:hidden absolute inset-x-0 top-[100%] z-50 bg-white/95 backdrop-blur-xl border-b border-slate-200 p-6 shadow-2xl space-y-6 animate-fadeIn">
           <nav className="flex flex-col space-y-3">
             {(config.navigation || []).map((item: any) => (
               <a
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-3 rounded-xl text-base font-semibold text-foreground hover:bg-brand-light hover:text-brand-primary transition-colors flex items-center justify-between"
+                className="px-4 py-3 rounded-xl text-base font-semibold text-slate-900 hover:bg-brand-light hover:text-brand-primary transition-colors flex items-center justify-between"
               >
                 <span>{item.label}</span>
                 <ArrowRight className="w-4 h-4 opacity-40" />
@@ -223,7 +206,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
             ))}
           </nav>
 
-          <div className="pt-4 border-t border-slate-200 dark:border-zinc-800 space-y-3">
+          <div className="pt-4 border-t border-slate-200 space-y-3">
             <a
               href={finalCtaHref}
               onClick={() => setMobileMenuOpen(false)}
@@ -238,7 +221,7 @@ export const Header: React.FC<HeaderProps> = ({ config, isEditorPreview = false 
             {phoneLink && (
               <a
                 href={phoneLink}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold border border-slate-200 dark:border-zinc-800 text-foreground hover:bg-slate-50 dark:hover:bg-zinc-900"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold border border-slate-200 text-slate-900 hover:bg-slate-50"
               >
                 <Phone className="w-4 h-4 text-brand-primary" />
                 <span>{config.contact?.phoneFormatted || config.contact?.phone}</span>

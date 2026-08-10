@@ -54,10 +54,9 @@ let lastHistoryTimestamp = 0;
 
 export function applyThemeToDocument(mode: ThemeMode = 'light', lang: LanguageCode = 'tr') {
   if (typeof document === 'undefined') return;
-  const isDark = mode === 'dark';
-  document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
-  document.documentElement.classList.toggle('dark', isDark);
-  document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+  document.documentElement.dataset.theme = 'light';
+  document.documentElement.classList.remove('dark');
+  document.documentElement.style.colorScheme = 'light';
   document.documentElement.lang = lang || 'tr';
 }
 
@@ -97,6 +96,7 @@ function migrateLegacyConfig(config: any): SiteConfig {
   }
 
   if (!draft.language) draft.language = 'tr';
+  if (draft.theme) draft.theme.mode = 'light';
   draft.schemaVersion = 2;
   return draft as SiteConfig;
 }
@@ -139,16 +139,13 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
   },
 
   toggleThemeMode: () => {
-    get().updateConfig((draft) => {
-      const current = draft.theme.mode;
-      draft.theme.mode = current === 'dark' ? 'light' : 'dark';
-    });
+    // Light mode locked
+    applyThemeToDocument('light', get().config.language);
   },
 
-  setThemeMode: (mode) => {
-    get().updateConfig((draft) => {
-      draft.theme.mode = mode;
-    });
+  setThemeMode: () => {
+    // Light mode locked
+    applyThemeToDocument('light', get().config.language);
   },
 
   updateConfig: (updater, skipHistory = false) => {
@@ -164,8 +161,9 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
     const draft = JSON.parse(JSON.stringify(config)) as SiteConfig;
     const result = updater(draft);
     const newConfig = result || draft;
+    if (newConfig.theme) newConfig.theme.mode = 'light';
 
-    applyThemeToDocument(newConfig.theme?.mode, newConfig.language);
+    applyThemeToDocument('light', newConfig.language);
 
     set({
       config: newConfig,
@@ -182,7 +180,8 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
   setConfigDirectly: (newConfig) => {
     const { config, pastHistory } = get();
     const newPast = [...pastHistory, config].slice(-MAX_HISTORY_STEPS);
-    applyThemeToDocument(newConfig.theme?.mode, newConfig.language);
+    if (newConfig.theme) newConfig.theme.mode = 'light';
+    applyThemeToDocument('light', newConfig.language);
     set({
       config: newConfig,
       pastHistory: newPast,
@@ -200,7 +199,7 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
     const newPast = pastHistory.slice(0, pastHistory.length - 1);
     const newFuture = [config, ...futureHistory].slice(0, MAX_HISTORY_STEPS);
 
-    applyThemeToDocument(previous.theme?.mode, previous.language);
+    applyThemeToDocument('light', previous.language);
 
     set({
       config: previous,
@@ -218,7 +217,7 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
     const newFuture = futureHistory.slice(1);
     const newPast = [...pastHistory, config].slice(-MAX_HISTORY_STEPS);
 
-    applyThemeToDocument(next.theme?.mode, next.language);
+    applyThemeToDocument('light', next.language);
 
     set({
       config: next,
@@ -247,6 +246,7 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
 
     get().updateConfig((draft) => {
       draft.theme.preset = presetId;
+      draft.theme.mode = 'light';
       if (presetDef.themeDefaults.colors) {
         draft.theme.colors = {
           ...draft.theme.colors,
@@ -287,15 +287,15 @@ export const useSiteStore = create<SiteStoreState>((set, get) => ({
       if (saved) {
         const parsed = JSON.parse(saved);
         const migrated = migrateLegacyConfig(parsed);
-        applyThemeToDocument(migrated.theme?.mode, migrated.language);
+        applyThemeToDocument('light', migrated.language);
         set({ config: migrated });
       } else {
-        applyThemeToDocument(defaultSiteConfig.theme?.mode, defaultSiteConfig.language);
+        applyThemeToDocument('light', defaultSiteConfig.language);
         set({ config: defaultSiteConfig });
       }
     } catch (e) {
       console.warn('Could not parse site config from localStorage:', e);
-      applyThemeToDocument(defaultSiteConfig.theme?.mode, defaultSiteConfig.language);
+      applyThemeToDocument('light', defaultSiteConfig.language);
       set({ config: defaultSiteConfig });
     }
   },

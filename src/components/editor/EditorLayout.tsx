@@ -27,9 +27,6 @@ import {
   ExternalLink,
   CheckCircle2,
   Sparkles,
-  Sun,
-  Moon,
-  Globe,
 } from 'lucide-react';
 
 export const EditorLayout: React.FC = () => {
@@ -47,7 +44,6 @@ export const EditorLayout: React.FC = () => {
     isSaving,
     lastSavedAt,
     setLanguage,
-    toggleThemeMode,
   } = useSiteStore();
 
   useEffect(() => {
@@ -55,7 +51,6 @@ export const EditorLayout: React.FC = () => {
   }, [loadFromLocalStorage]);
 
   const currentLang = config.language || 'tr';
-  const isDarkMode = config.theme?.mode === 'dark';
 
   const tabs: Array<{ id: PanelTab; label: string; icon: React.ReactNode }> = [
     { id: 'content', label: 'İçerik', icon: <FileText className="w-4 h-4" /> },
@@ -116,7 +111,7 @@ export const EditorLayout: React.FC = () => {
           </div>
         </div>
 
-        {/* Center: Viewport Switchers & Language / Theme Controls */}
+        {/* Center: Viewport Switchers & Language Controls */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 bg-slate-100 dark:bg-zinc-800/60 p-1 rounded-xl border border-slate-200/60 dark:border-zinc-800">
             <button
@@ -192,15 +187,6 @@ export const EditorLayout: React.FC = () => {
               EN
             </button>
           </div>
-
-          {/* Dark / Light Mode Toggle */}
-          <button
-            onClick={toggleThemeMode}
-            className="p-2 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors"
-            title={isDarkMode ? 'Aydınlık Moda Geç' : 'Karanlık Moda Geç'}
-          >
-            {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
-          </button>
         </div>
 
         {/* Right: Go to Published Site View */}

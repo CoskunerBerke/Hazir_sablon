@@ -36,13 +36,13 @@ export const SiteRenderer: React.FC<SiteRendererProps> = ({
 
   const { sectionOrder = [], sectionVisibility = {}, features = {}, theme } = effectiveConfig || {};
 
-  // Dynamically compute CSS variables from live store config
-  const themeCssVars = theme ? generateCssVariablesFromConfig(theme) : {};
-  const isDark = theme?.mode === 'dark';
+  // Force light mode
+  const themeConfig = { ...theme, mode: 'light' as const };
+  const themeCssVars = themeConfig ? generateCssVariablesFromConfig(themeConfig) : {};
 
   useEffect(() => {
-    applyThemeToDocument(theme?.mode, language);
-  }, [theme?.mode, language]);
+    applyThemeToDocument('light', language);
+  }, [language]);
 
   const SECTION_BADGE_NAMES: Record<string, string> = {
     hero: language === 'en' ? 'Hero / Banner' : 'Giriş / Manşet',
@@ -118,11 +118,9 @@ export const SiteRenderer: React.FC<SiteRendererProps> = ({
 
   return (
     <div
-      data-theme={isDark ? 'dark' : 'light'}
+      data-theme="light"
       data-style-preset={theme?.preset || 'minimal'}
-      className={`min-h-screen flex flex-col justify-between bg-background text-foreground transition-colors duration-300 ${
-        isDark ? 'dark' : ''
-      }`}
+      className="min-h-screen flex flex-col justify-between bg-background text-foreground transition-colors duration-300"
       style={themeCssVars as React.CSSProperties}
     >
       {/* Inject Live Dynamic Theme CSS Variables */}

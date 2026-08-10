@@ -4,12 +4,19 @@ import React, { useEffect, useState } from 'react';
 import { useSiteStore } from '@/store/use-site-store';
 import { extractContent, getEffectiveConfig } from '@/lib/i18n';
 import { LanguageCode } from '@/types/site-config';
-import { Plus, Trash2, ChevronDown, ChevronUp, Globe, Sparkles } from 'lucide-react';
+import { Plus, Trash2, ChevronDown, ChevronUp, Globe } from 'lucide-react';
 
 export const ContentPanel: React.FC = () => {
-  const { config, updateConfig, selectedSection } = useSiteStore();
-  const [editingLang, setEditingLang] = useState<LanguageCode>('tr');
+  const { config, updateConfig, selectedSection, setLanguage } = useSiteStore();
+  const [editingLang, setEditingLang] = useState<LanguageCode>(config.language || 'tr');
   const [expandedSection, setExpandedSection] = useState<string>('hero');
+
+  // Keep editingLang synchronized with site store language
+  useEffect(() => {
+    if (config.language && config.language !== editingLang) {
+      setEditingLang(config.language);
+    }
+  }, [config.language]);
 
   // Auto expand section when selected from preview frame
   useEffect(() => {
@@ -17,6 +24,11 @@ export const ContentPanel: React.FC = () => {
       setExpandedSection(selectedSection);
     }
   }, [selectedSection]);
+
+  const handleSelectLanguage = (lang: LanguageCode) => {
+    setEditingLang(lang);
+    setLanguage(lang);
+  };
 
   const toggleAccordion = (id: string) => {
     setExpandedSection(expandedSection === id ? '' : id);
@@ -36,11 +48,9 @@ export const ContentPanel: React.FC = () => {
       }
       updater((draft as any).i18nContent[editingLang]);
 
-      // If editing language matches current active website language, sync draft root
-      if (draft.language === editingLang) {
-        const eff = getEffectiveConfig(draft, editingLang);
-        Object.assign(draft, eff);
-      }
+      // Sync effective config for editing language
+      const eff = getEffectiveConfig(draft, editingLang);
+      Object.assign(draft, eff);
     });
   };
 
@@ -49,7 +59,7 @@ export const ContentPanel: React.FC = () => {
       {/* Language Switcher Tabs for Content Panel */}
       <div className="p-1.5 rounded-2xl bg-slate-100 dark:bg-zinc-800/80 border border-slate-200 dark:border-zinc-700 flex items-center gap-2">
         <button
-          onClick={() => setEditingLang('tr')}
+          onClick={() => handleSelectLanguage('tr')}
           className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 ${
             editingLang === 'tr'
               ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs border border-slate-200 dark:border-zinc-700'
@@ -59,7 +69,7 @@ export const ContentPanel: React.FC = () => {
           <span>🇹🇷 Türkçe İçerik</span>
         </button>
         <button
-          onClick={() => setEditingLang('en')}
+          onClick={() => handleSelectLanguage('en')}
           className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 ${
             editingLang === 'en'
               ? 'bg-white dark:bg-zinc-900 text-brand-primary shadow-xs border border-slate-200 dark:border-zinc-700'
@@ -238,7 +248,7 @@ export const ContentPanel: React.FC = () => {
               </div>
             ))}
             <button
-              onClick={() => updateContent((c) => { c.trustPoints.push({ title: 'New Trust Point', description: 'Description here', iconName: 'ShieldCheck' }); })}
+              onClick={() => updateContent((c) => { c.trustPoints.push({ title: editingLang === 'en' ? 'New Trust Point' : 'Yeni Güven Rozeti', description: editingLang === 'en' ? 'Description here' : 'Rozet açıklaması', iconName: 'ShieldCheck' }); })}
               className="w-full py-2 rounded-xl border border-dashed border-brand-primary text-brand-primary font-bold text-xs hover:bg-brand-light/30 transition-colors flex items-center justify-center gap-1"
             >
               <Plus className="w-4 h-4" />
@@ -310,7 +320,7 @@ export const ContentPanel: React.FC = () => {
                 </div>
               ))}
               <button
-                onClick={() => updateContent((c) => { if (!c.about.text) c.about.text = []; c.about.text.push('New paragraph...'); })}
+                onClick={() => updateContent((c) => { if (!c.about.text) c.about.text = []; c.about.text.push(editingLang === 'en' ? 'New paragraph text...' : 'Yeni paragraf metni...'); })}
                 className="inline-flex items-center gap-1 text-xs font-bold text-brand-primary hover:underline pt-1"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -338,7 +348,7 @@ export const ContentPanel: React.FC = () => {
                 </div>
               ))}
               <button
-                onClick={() => updateContent((c) => { if (!c.about.highlights) c.about.highlights = []; c.about.highlights.push('New Highlight'); })}
+                onClick={() => updateContent((c) => { if (!c.about.highlights) c.about.highlights = []; c.about.highlights.push(editingLang === 'en' ? 'New Highlight' : 'Yeni Öne Çıkan Özellik'); })}
                 className="inline-flex items-center gap-1 text-xs font-bold text-brand-primary hover:underline pt-1"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -455,7 +465,14 @@ export const ContentPanel: React.FC = () => {
               <button
                 onClick={() => updateContent((c) => {
                   if (!c.services.items) c.services.items = [];
-                  c.services.items.push({ id: `srv-${Date.now()}`, title: 'New Service', description: 'Description', price: '$50', category: 'Standard', buttonText: 'Learn More' });
+                  c.services.items.push({
+                    id: `srv-${Date.now()}`,
+                    title: editingLang === 'en' ? 'New Service' : 'Yeni Hizmet',
+                    description: editingLang === 'en' ? 'Service description...' : 'Hizmet açıklaması...',
+                    price: editingLang === 'en' ? '$50' : '₺500',
+                    category: editingLang === 'en' ? 'Standard' : 'Standart',
+                    buttonText: editingLang === 'en' ? 'Learn More' : 'Bilgi Al',
+                  });
                 })}
                 className="w-full py-2 rounded-xl border border-dashed border-brand-primary text-brand-primary font-bold text-xs hover:bg-brand-light/30 transition-colors flex items-center justify-center gap-1"
               >
@@ -610,7 +627,13 @@ export const ContentPanel: React.FC = () => {
             <button
               onClick={() => updateContent((c) => {
                 if (!c.reviews.items) c.reviews.items = [];
-                c.reviews.items.push({ id: `rev-${Date.now()}`, name: 'Client Name', role: 'Verified Client', comment: 'Great experience!', source: 'Google Maps' });
+                c.reviews.items.push({
+                  id: `rev-${Date.now()}`,
+                  name: editingLang === 'en' ? 'Client Name' : 'Müşteri Adı',
+                  role: editingLang === 'en' ? 'Verified Client' : 'Doğrulanmış Müşteri',
+                  comment: editingLang === 'en' ? 'Great experience!' : 'Harika bir deneyimdi!',
+                  source: 'Google Maps',
+                });
               })}
               className="w-full py-2 rounded-xl border border-dashed border-brand-primary text-brand-primary font-bold text-xs hover:bg-brand-light/30 transition-colors flex items-center justify-center gap-1"
             >

@@ -279,98 +279,12 @@ export function extractContent(config: SiteConfig, lang: LanguageCode) {
   const preset = lang === 'en' ? ENGLISH_PRESET : TURKISH_PRESET;
   const existing = (config as any).i18nContent?.[lang];
 
-  if (existing) return existing;
+  if (existing) {
+    return existing;
+  }
 
-  return {
-    business: {
-      name: config.business?.name || preset.business.name,
-      shortName: config.business?.shortName || preset.business.shortName,
-      industry: config.business?.industry || preset.business.industry,
-      tagline: config.business?.tagline || preset.business.tagline,
-      description: config.business?.description || preset.business.description,
-    },
-    hero: {
-      badge: config.hero?.badge || preset.hero.badge,
-      title: config.hero?.title || preset.hero.title,
-      description: config.hero?.description || preset.hero.description,
-      primaryCtaText: config.hero?.primaryCta?.text || preset.hero.primaryCtaText,
-      secondaryCtaText: config.hero?.secondaryCta?.text || preset.hero.secondaryCtaText,
-    },
-    trustPoints: Array.isArray(config.trustPoints) && config.trustPoints.length > 0
-      ? config.trustPoints.map((tp, idx) => ({
-          title: tp.title || preset.trustPoints[idx]?.title || preset.trustPoints[0].title,
-          description: tp.description || preset.trustPoints[idx]?.description || preset.trustPoints[0].description,
-          iconName: tp.iconName || 'ShieldCheck',
-        }))
-      : preset.trustPoints,
-    about: {
-      badge: config.about?.badge || preset.about.badge,
-      title: config.about?.title || preset.about.title,
-      subtitle: config.about?.subtitle || preset.about.subtitle,
-      text: Array.isArray(config.about?.text) ? config.about.text : preset.about.text,
-      highlights: Array.isArray(config.about?.highlights) ? config.about.highlights : preset.about.highlights,
-    },
-    services: {
-      badge: (config.services as any)?.badge || preset.services.badge,
-      title: (config.services as any)?.title || preset.services.title,
-      subtitle: (config.services as any)?.subtitle || preset.services.subtitle,
-      items: Array.isArray(config.services?.items)
-        ? config.services.items.map((item, idx) => ({
-            id: item.id || `service-${idx + 1}`,
-            title: item.title || preset.services.items[idx]?.title || 'Service',
-            description: item.description || preset.services.items[idx]?.description || '',
-            price: item.price || preset.services.items[idx]?.price || '',
-            duration: item.duration || preset.services.items[idx]?.duration || '',
-            category: item.category || preset.services.items[idx]?.category || '',
-            buttonText: item.buttonText || preset.services.items[idx]?.buttonText || 'Learn More',
-          }))
-        : preset.services.items,
-    },
-    specialSection: {
-      badge: (config.specialSection as any)?.badge || preset.specialSection.badge,
-      title: config.specialSection?.title || preset.specialSection.title,
-      subtitle: config.specialSection?.subtitle || preset.specialSection.subtitle,
-      steps: Array.isArray(config.specialSection?.steps)
-        ? config.specialSection.steps.map((st, idx) => ({
-            step: st.step || `0${idx + 1}`,
-            title: st.title || preset.specialSection.steps[idx]?.title || '',
-            description: st.description || preset.specialSection.steps[idx]?.description || '',
-            iconName: st.iconName || 'Sparkles',
-          }))
-        : preset.specialSection.steps,
-    },
-    gallery: {
-      badge: (config.gallery as any)?.badge || preset.gallery.badge,
-      title: (config.gallery as any)?.title || preset.gallery.title,
-      subtitle: (config.gallery as any)?.subtitle || preset.gallery.subtitle,
-    },
-    reviews: {
-      badge: (config.reviews as any)?.badge || preset.reviews.badge,
-      title: (config.reviews as any)?.title || preset.reviews.title,
-      subtitle: (config.reviews as any)?.subtitle || preset.reviews.subtitle,
-      items: Array.isArray(config.reviews?.items)
-        ? config.reviews.items.map((rev, idx) => ({
-            id: rev.id || `rev-${idx + 1}`,
-            name: rev.name || preset.reviews.items[idx]?.name || '',
-            role: rev.role || preset.reviews.items[idx]?.role || '',
-            comment: rev.comment || preset.reviews.items[idx]?.comment || '',
-            date: rev.date || preset.reviews.items[idx]?.date || '',
-            source: rev.source || 'Google Maps',
-          }))
-        : preset.reviews.items,
-    },
-    contact: {
-      badge: (config.contact as any)?.badge || preset.contact.badge,
-      title: (config.contact as any)?.title || preset.contact.title,
-      subtitle: (config.contact as any)?.subtitle || preset.contact.subtitle,
-      address: config.contact?.address || preset.contact.address,
-    },
-    features: {
-      announcementText: config.features?.announcementText || preset.features.announcementText,
-    },
-    footerText: config.footerText || preset.footerText,
-    copyrightText: config.copyrightText || preset.copyrightText,
-  };
+  // Clone preset directly to ensure TR always gets Turkish preset and EN gets English preset initially
+  return JSON.parse(JSON.stringify(preset));
 }
 
 /**
@@ -389,6 +303,15 @@ export function getEffectiveConfig(config: SiteConfig, lang: LanguageCode = 'tr'
   }
 
   const content = (effective as any).i18nContent[lang] || extractContent(config, lang);
+
+  // Apply localized navigation
+  if (Array.isArray(content.navigation) && Array.isArray(effective.navigation)) {
+    content.navigation.forEach((nav: any, idx: number) => {
+      if (effective.navigation[idx]) {
+        effective.navigation[idx].label = nav.label || effective.navigation[idx].label;
+      }
+    });
+  }
 
   // Apply localized business
   if (content.business) {
