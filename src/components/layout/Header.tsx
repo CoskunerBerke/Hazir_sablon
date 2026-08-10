@@ -20,7 +20,8 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
       setIsScrolled(window.scrollY > 20);
 
       // Section scroll spy
-      const sections = config.navigation.map((nav) => nav.href.replace('#', ''));
+      const navItems = config.navigation || [];
+      const sections = navItems.map((nav) => nav.href.replace('#', ''));
       const current = sections.find((section) => {
         const el = document.getElementById(section);
         if (el) {
@@ -36,14 +37,17 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [config.navigation]);
 
-  const monogram = config.shortName
+  const shortNameText = config.shortName || (config as any).business?.shortName || (config as any).businessName || 'İA';
+  const monogram = shortNameText
     .split(' ')
+    .filter(Boolean)
     .map((w) => w[0])
     .join('')
     .toUpperCase()
-    .slice(0, 2);
+    .slice(0, 2) || 'İA';
 
-  const primaryCta = config.hero.primaryCta;
+  const primaryCta = config.hero?.primaryCta || { text: 'İletişim', href: '#contact' };
+  const logoSrc = config.logo || (config as any).brand?.logo;
 
   return (
     <header
@@ -57,14 +61,14 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
         <div className="flex items-center justify-between">
           {/* Logo / Monogram */}
           <Link href="/" className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-brand-primary rounded-lg p-1">
-            {config.logo ? (
+            {logoSrc ? (
               <div className="relative h-10 w-36 sm:w-44 flex items-center">
                 <SafeImage
-                  src={config.logo}
-                  alt={config.logoAlt || config.businessName}
+                  src={logoSrc}
+                  alt={config.logoAlt || shortNameText}
                   fill
                   className="object-contain object-left"
-                  placeholderLabel={config.shortName}
+                  placeholderLabel={shortNameText}
                   priority
                 />
               </div>
@@ -74,7 +78,7 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
                   {monogram}
                 </div>
                 <span className="font-bold text-lg text-foreground tracking-tight group-hover:text-brand-primary transition-colors">
-                  {config.shortName}
+                  {shortNameText}
                 </span>
               </div>
             )}
@@ -82,7 +86,7 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1 bg-slate-100/60 dark:bg-zinc-900/60 backdrop-blur-md p-1.5 rounded-full border border-slate-200/60 dark:border-zinc-800/60">
-            {config.navigation.map((item) => {
+            {(config.navigation || []).map((item) => {
               const sectionId = item.href.replace('#', '');
               const isActive = activeSection === sectionId;
 
@@ -104,7 +108,7 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
 
           {/* Right Action CTA */}
           <div className="hidden lg:flex items-center gap-3">
-            {config.contact.phone && (
+            {config.contact?.phone && (
               <a
                 href={`tel:${config.contact.phone}`}
                 className="hidden xl:flex items-center gap-2 text-xs font-semibold text-muted hover:text-foreground transition-colors px-3 py-2"
@@ -140,7 +144,7 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-x-0 top-[65px] z-50 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xl border-b border-slate-200 dark:border-zinc-800 p-6 shadow-2xl space-y-6 animate-fadeIn">
           <nav className="flex flex-col space-y-3">
-            {config.navigation.map((item) => (
+            {(config.navigation || []).map((item) => (
               <a
                 key={item.href}
                 href={item.href}
@@ -165,7 +169,7 @@ export const Header: React.FC<HeaderProps> = ({ config }) => {
               <span>{primaryCta.text}</span>
             </a>
 
-            {config.contact.phone && (
+            {config.contact?.phone && (
               <a
                 href={`tel:${config.contact.phone}`}
                 className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold border border-slate-200 dark:border-zinc-800 text-foreground hover:bg-slate-50 dark:hover:bg-zinc-900"
