@@ -23,6 +23,10 @@ export const metadata: Metadata = {
     title: defaultSiteConfig.seo.title,
     description: defaultSiteConfig.seo.description,
   },
+  other: {
+    'color-scheme': 'light',
+    'supported-color-schemes': 'light',
+  },
 };
 
 export default function RootLayout({
@@ -33,6 +37,9 @@ export default function RootLayout({
   return (
     <html lang="tr" data-theme="light" suppressHydrationWarning>
       <head>
+        <meta name="color-scheme" content="light" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="supported-color-schemes" content="light" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
